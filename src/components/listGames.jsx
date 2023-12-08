@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation";
+import { indexFrontend } from "@/app/constants";
 export default function ListGames(){
     const [allGames, setAllGames] = useState([])
+    const router =  useRouter();
 
     useEffect(()=>{
-        let allg;
         if(sessionStorage.getItem('jwt')){
             const response = fetch("http://localhost:8081/game/allgamesbyuser",{
             method: "GET",
@@ -12,21 +14,25 @@ export default function ListGames(){
                 'authorization': sessionStorage.getItem('jwt') || '',
             },
         }).then((x)=>{
-            console.log(x);
-            x.json().then((y) =>{setAllGames(y)
-            })
+            if (x.status === 200) {
+                x.json().then((y) =>{setAllGames(y)})
+            }
+            else{
+                if(x.status === 401){
+                    sessionStorage.removeItem('jwt')
+                    router.push(indexFrontend)
+                }
+            }
         })
-            
         }
         else{
-            console.log('no');
-            
+            router.push(indexFrontend)
         }
     
     }, [])
 
     function handleClickVerDetalleJuego(uuid_game){
-        //Aca me quede, al clickear, entrar al detalle del juego
+        router.push("http://localhost:3001/dashboard/games/" + uuid_game)
     }
 
     if(allGames.length > 0){
@@ -47,7 +53,7 @@ export default function ListGames(){
                                     <td>{x._id}</td>
                                     <td>{x.isStart ? "SI":"NO"}</td>
                                     <td>{x.isEnd? "SI":"NO"}</td>
-                                    <td><button type="submit" onClick={handleClickVerDetalleJuego} >Ver Juego</button>    </td>
+                                    <td><button type="submit" onClick={function() {handleClickVerDetalleJuego(x._id)}} >Ver Juego</button>    </td>
                                     
                                 </tr>
                                 
