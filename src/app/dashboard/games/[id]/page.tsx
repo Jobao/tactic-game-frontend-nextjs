@@ -3,10 +3,12 @@ import { indexFrontend } from "@/app/constants";
 import GameBoard from "@/components/board";
 import  { useRouter,useParams } from "next/navigation";
 import { useEffect, useState } from "react"
+import { Game } from "@/interfaces/game";
+import * as React from 'react';
 
 export default function GamePage(){
 
-    const [gameState, setGameState] = useState({_id:'', sizeX:0});
+    const [gameState, setGameState] = React.useState<Game>();
     const router =  useRouter();
     const params = useParams()
 
@@ -42,18 +44,20 @@ export default function GamePage(){
         }
     
     }, [])
-    if(gameState._id !== ''){
-        return(
-            <div>{gameState._id}
-            <GameBoard _id={gameState._id} sizeX={gameState.sizeX}></GameBoard>
-                <p>{gameState.sizeX}</p>
-            </div>
-        )
-    }
-    else{
-        return(
-            <div>ERROR</div>
-        )
+    if (gameState) {
+        if(gameState._id !== ''){
+            return(
+                <div>{gameState._id}
+                <GameBoard {...gameState}></GameBoard>
+                    <p>{gameState.sizeX}</p>
+                </div>
+            )
+        }
+        else{
+            return(
+                <div>ERROR</div>
+            )
+        }
     }
 
 }
