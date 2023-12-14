@@ -5,12 +5,18 @@ import  { useRouter,useParams } from "next/navigation";
 import { useEffect, useState } from "react"
 import { Game } from "@/interfaces/game";
 import * as React from 'react';
+import UnitDetails from "@/components/unitDetails";
+import { GameUnit } from "@/interfaces/gameUnit";
 
 export default function GamePage(){
 
     const [gameState, setGameState] = React.useState<Game>();
     const router =  useRouter();
     const params = useParams()
+    const [selectedUnit, setSelectedUnit] = React.useState<GameUnit>();
+    function handleSelectedUnit(x:GameUnit){
+        setSelectedUnit(x);
+    }
 
     useEffect(()=>{
         try {
@@ -48,8 +54,11 @@ export default function GamePage(){
         if(gameState._id !== ''){
             return(
                 <div>{gameState._id}
-                <GameBoard {...gameState}></GameBoard>
-                    <p>{gameState.sizeX}</p>
+                <div style={{display: "flex"}}>
+                    <GameBoard {...{game:gameState, handle:handleSelectedUnit}}></GameBoard>
+                    <UnitDetails {...{selectedUnit:selectedUnit, handle:handleSelectedUnit }}></UnitDetails>
+                </div>
+                
                 </div>
             )
         }

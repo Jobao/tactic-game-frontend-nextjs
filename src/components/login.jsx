@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 export default function Login(){
     const [user, setUser] = useState('');
     const [pass, setPass] =  useState('');
-    const [jwt, setjwt] = useState('');
     const router =  useRouter();
 
     const onChangeUser = async(e)=>{
