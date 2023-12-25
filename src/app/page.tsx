@@ -1,11 +1,10 @@
-//import Board from '@/components/board'
-import Login from '@/components/login'
+import LoginComponent from '@/components/Login/loginComponent'
+
 
 export default function Home() {
-  return(
+  return (
     <main>
-      <Login></Login>
+      <LoginComponent></LoginComponent>
     </main>
   )
-  
 }

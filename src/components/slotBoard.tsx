@@ -1,23 +1,16 @@
-import { GameUnit } from "@/interfaces/gameUnit";
-import React from "react";
-import styles from "../app/dashboard/games/[id]/styles.module.css"
+"use client";
+import { GameUnit } from "@/lib/interfaces";
 
-export default function SlotBoard(prop:GameUnit |undefined, handle:any){
-    if(prop){
-        return(
-            <div className={styles.ocupiedSlot}>
-                <button type="button" onClick={()=>{
-                    handle(prop)
-                }}>OK</button>
-            </div>
-        )
-    }
-    else{
-        return(
-            <div className={styles.emptySlot}>
-                .
-            </div>
-        )
-    }
-
+export default function SlotBoard(
+  unit: GameUnit | null,
+  handleOnSelectUnit: Function | null
+) {
+  if (unit && handleOnSelectUnit) {
+    return (
+      <div>
+        <button onClick={() => handleOnSelectUnit(unit)}>Select</button>
+      </div>
+    );
+  }
+  return <div></div>;
 }
