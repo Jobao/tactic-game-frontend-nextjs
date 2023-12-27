@@ -8,6 +8,7 @@ export default function SelectedGameUnitDetails(props: {
   gameUnit: GameUnit | undefined;
   // eslint-disable-next-line @typescript-eslint/ban-types
   handleSelectUnit: Function;
+  handleUpdate: Function;
 }) {
   if (!props.gameUnit) {
     return <></>;
@@ -20,6 +21,7 @@ export default function SelectedGameUnitDetails(props: {
             showActions:
               props.gameUnit?.user_uuid === useSessionStorage("user_uuid"),
             gameUnit: props.gameUnit,
+            handleUpdate: props.handleUpdate,
           }}
         ></SelectedGameUnitActions>
       </div>

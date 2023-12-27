@@ -1,5 +1,6 @@
 "use client";
 
+import GameBoard2 from "@/components/game/gameboard2";
 import GameBoard from "@/components/gameBoard";
 import SelectedGameUnitDetails from "@/components/selectedGameUnitDetails";
 import { Game, GameUnit } from "@/lib/interfaces";
@@ -10,9 +11,12 @@ export default function GameDetails() {
   const params = useParams();
   const [actGame, setActGame] = useState<Game>();
   const [selectedUnit, setSelectedUnit] = useState<GameUnit | undefined>();
+  const [update, setUpdate] = useState(false);
 
   useEffect(() => {
     try {
+      console.log("Effect");
+
       if (sessionStorage.getItem("jwt")) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const response = fetch("http://localhost:8081/game/" + params.id, {
@@ -37,11 +41,23 @@ export default function GameDetails() {
     } catch (error) {
       //console.log(error);
     }
-  }, []);
+  }, [update]);
 
   function handleOnSelectUnit(gameUnit: GameUnit) {
     setSelectedUnit(gameUnit);
   }
+
+  function handleOnChangeValue() {
+    setUpdate(!update);
+  }
+  /*if (actGame) {
+    return (
+      <div>
+        <p>Hola</p>
+        <GameBoard2 {...{ game: actGame }}></GameBoard2>
+      </div>
+    );
+  }*/
 
   return (
     <div className=" flex">
@@ -59,6 +75,7 @@ export default function GameDetails() {
             {...{
               gameUnit: selectedUnit,
               handleSelectUnit: handleOnSelectUnit,
+              handleUpdate: handleOnChangeValue,
             }}
           ></SelectedGameUnitDetails>
         </div>

@@ -2,9 +2,12 @@
 import { useState } from "react";
 import { CoordInputGameUnitAction } from "./coordInpuGameUnitAction";
 import { GameUnit } from "@/lib/interfaces";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-export function MoveButtonAction(props: { gameUnit: GameUnit | undefined }) {
+export function MoveButtonAction(props: {
+  gameUnit: GameUnit | undefined;
+  handleUpdate: Function;
+}) {
   const params = useParams();
 
   function handleClick() {
@@ -32,6 +35,16 @@ export function MoveButtonAction(props: { gameUnit: GameUnit | undefined }) {
         }),
       }
     );
+
+    response.then((x) => {
+      if (x.status === 200) {
+        x.json().then((res) => {
+          if (res.status === "OK") {
+            props.handleUpdate();
+          }
+        });
+      }
+    });
   }
 
   if (props.gameUnit?.canMove) {

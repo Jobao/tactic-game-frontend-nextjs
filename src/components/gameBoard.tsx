@@ -26,26 +26,30 @@ export default function GameBoard(props: {
   for (let i = 0; i < props.game.sizeY; i++) {
     const row = [];
     for (let j = 0; j < props.game.sizeX; j++) {
-      const element: GameUnit = gridd.get([i, j].join("::"));
+      const element: GameUnit = gridd.get([j, i].join("::"));
       if (element) {
-        row.push(SlotBoard(element, props.onSelectUnitHandle));
+        row.push(
+          SlotBoard(
+            element,
+            props.onSelectUnitHandle,
+            j.toString() + "-" + i.toString()
+          )
+        );
       } else {
-        row.push(SlotBoard(null, null));
+        row.push(SlotBoard(null, null, j.toString() + "-" + i.toString()));
       }
     }
     cells.push(row);
   }
   return (
     <div
-      className={
-        "grid grid-cols-" + props.game.sizeX + " grid-row-" + props.game.sizeY
-      }
+      className={`grid grid-cols-${props.game.sizeX} grid-rows-${props.game.sizeY}`}
     >
       {cells.map((row, rowIndex) => (
         <div key={rowIndex} style={{ display: "flex" }}>
           {row.map((cell, cellIndex) => (
             <div
-              key={rowIndex + 1 * cellIndex + 1 + 1}
+              key={rowIndex + "-" + cellIndex}
               style={{
                 border: "1px solid black",
                 width: "50px",
@@ -62,3 +66,30 @@ export default function GameBoard(props: {
     </div>
   );
 }
+/*
+return (
+    <div
+      className={
+        "grid grid-cols-" + props.game.sizeX + " grid-row-" + props.game.sizeY
+      }
+    ></div>
+  );
+{cells.map((row, rowIndex) => (
+        <div key={rowIndex} style={{ display: "flex" }}>
+          {row.map((cell, cellIndex) => (
+            <div
+              key={rowIndex + "-" + cellIndex}
+              style={{
+                border: "1px solid black",
+                width: "50px",
+                height: "50px",
+                textAlign: "center",
+                lineHeight: "50px",
+              }}
+            >
+              {cell}
+            </div>
+          ))}
+        </div>
+      ))}
+*/
