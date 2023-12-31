@@ -51,24 +51,28 @@ export default function GameDetails() {
     }
   }
 
-  return (
-    <div className=" flex">
-      <div className=" w-6/12">
-        <GameBoard
-          {...{ game: actGame, onSelectUnitHandle: handleOnSelectUnit }}
-        ></GameBoard>
+  if (actGame) {
+    return (
+      <div className=" flex">
+        <div className=" w-6/12">
+          <GameBoard
+            {...{ game: actGame, onSelectUnitHandle: handleOnSelectUnit }}
+          ></GameBoard>
+        </div>
+        <div className="w-6/12 border -mr-2">
+          {selectedUnit ? (
+            <GameUnitSelectedTab
+              {...{ gameUnit: selectedUnit, handleUpdate: handleOnChangeValue }}
+            ></GameUnitSelectedTab>
+          ) : (
+            <div>Seleccione una unidad</div>
+          )}
+        </div>
       </div>
-      <div className="w-6/12 border -mr-2">
-        {selectedUnit ? (
-          <GameUnitSelectedTab
-            {...{ gameUnit: selectedUnit, handleUpdate: handleOnChangeValue }}
-          ></GameUnitSelectedTab>
-        ) : (
-          <div>Seleccione una unidad</div>
-        )}
-      </div>
-    </div>
-  );
+    );
+  } else {
+    return <div>Error en la carga del juego</div>;
+  }
 }
 
 //key={selectedUnit ? selectedUnit.unitBase_uuid : "0"}

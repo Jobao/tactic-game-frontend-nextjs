@@ -42,7 +42,15 @@ export default function SelectedGameUnitActions(props: {
         </AccordionPanel>
         <AccordionPanel>
           <AccordionTitle {...{ disabled: !props.gameUnit?.canAttack }}>
-            Atacar
+            <span
+              className={
+                !props.gameUnit?.canAttack
+                  ? " line-through decoration-red-600"
+                  : ""
+              }
+            >
+              Atacar
+            </span>
           </AccordionTitle>
           <AccordionContent>
             <CoordInputGameUnitAction

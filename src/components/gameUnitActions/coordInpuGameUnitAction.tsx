@@ -12,6 +12,7 @@ export function CoordInputGameUnitAction(props: {
   const params = useParams();
   const [x, setX] = useState(Number);
   const [y, setY] = useState(Number);
+  const [lastSlot, setLastSlot] = useState<HTMLElement | null>();
 
   function handleClick() {
     let response = fetch(
@@ -56,6 +57,17 @@ export function CoordInputGameUnitAction(props: {
         min={0}
         onChange={(e) => {
           setX(Number.parseInt(e.currentTarget.value));
+          if (y) {
+            if (lastSlot) {
+              lastSlot.style.backgroundColor = "white";
+            }
+            setLastSlot(
+              document.getElementById(x.toString() + "-" + y.toString())
+            );
+            if (lastSlot) {
+              lastSlot.style.backgroundColor = "red";
+            }
+          }
         }}
       />
       <input
@@ -67,6 +79,17 @@ export function CoordInputGameUnitAction(props: {
         min={0}
         onChange={(e) => {
           setY(Number.parseInt(e.currentTarget.value));
+          if (x) {
+            if (lastSlot) {
+              lastSlot.style.backgroundColor = "white";
+            }
+            setLastSlot(
+              document.getElementById(x.toString() + "-" + y.toString())
+            );
+            if (lastSlot) {
+              lastSlot.style.backgroundColor = "red";
+            }
+          }
         }}
       />
       <Button
