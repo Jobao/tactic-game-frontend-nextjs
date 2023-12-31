@@ -3,8 +3,7 @@ import { GameUnit } from "@/lib/interfaces";
 
 export default function SlotBoard(
   unit: GameUnit | null,
-  handleOnSelectUnit: Function | null,
-  ii: string
+  handleOnSelectUnit: Function | null
 ) {
   if (unit && handleOnSelectUnit) {
     return (

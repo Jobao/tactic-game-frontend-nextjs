@@ -7,7 +7,7 @@ export default function LoginComponent() {
         name=""
         id="user"
         placeholder="user"
-        className=" border "
+        className=" border"
       />
       <input
         type="password"

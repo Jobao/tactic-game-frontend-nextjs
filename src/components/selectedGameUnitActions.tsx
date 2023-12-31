@@ -1,20 +1,66 @@
+"use client";
+
+import {
+  Accordion,
+  AccordionContent,
+  AccordionPanel,
+  AccordionTitle,
+  Toast,
+} from "flowbite-react";
 import { GameUnit } from "@/lib/interfaces";
-import { MoveButtonAction } from "./gameUnitActions/moveButtonAction";
-import PP from "./prueba";
+import { CoordInputGameUnitAction } from "./gameUnitActions/coordInpuGameUnitAction";
+import ButtonWaitGameUnitAction from "./gameUnitActions/buttonWaitGameUnitAction";
 
 export default function SelectedGameUnitActions(props: {
-  showActions: boolean;
-  gameUnit: GameUnit | undefined;
+  gameUnit: GameUnit;
   handleUpdate: Function;
 }) {
-  if (!props.showActions) {
-    return <></>;
-  }
   return (
-    <div>
-      <MoveButtonAction
-        {...{ gameUnit: props.gameUnit, handleUpdate: props.handleUpdate }}
-      ></MoveButtonAction>
+    <div className="relative">
+      <Accordion collapseAll>
+        <AccordionPanel>
+          <AccordionTitle {...{ disabled: !props.gameUnit?.canMove }}>
+            <span
+              className={
+                !props.gameUnit?.canMove
+                  ? " line-through decoration-red-600"
+                  : ""
+              }
+            >
+              Mover
+            </span>
+          </AccordionTitle>
+          <AccordionContent>
+            <CoordInputGameUnitAction
+              {...{
+                action: "MOVE",
+                unit_uuid: props.gameUnit?.unitBase_uuid,
+                handleUpdate: props.handleUpdate,
+              }}
+            ></CoordInputGameUnitAction>
+          </AccordionContent>
+        </AccordionPanel>
+        <AccordionPanel>
+          <AccordionTitle {...{ disabled: !props.gameUnit?.canAttack }}>
+            Atacar
+          </AccordionTitle>
+          <AccordionContent>
+            <CoordInputGameUnitAction
+              {...{
+                action: "ATTACK",
+                unit_uuid: props.gameUnit?.unitBase_uuid,
+                handleUpdate: props.handleUpdate,
+              }}
+            ></CoordInputGameUnitAction>
+          </AccordionContent>
+        </AccordionPanel>
+        <AccordionPanel>
+          <AccordionTitle>Esperar</AccordionTitle>
+          <AccordionContent>
+            <ButtonWaitGameUnitAction></ButtonWaitGameUnitAction>
+          </AccordionContent>
+        </AccordionPanel>
+      </Accordion>
     </div>
   );
 }

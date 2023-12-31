@@ -7,5 +7,12 @@ export default function PlayGameButton(props: {
       "http://localhost:3001/dashboard/game/" + props.game_uuid
     );
   }
-  return <button onClick={() => handleClick()}>Jugar</button>;
+  return (
+    <button
+      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+      onClick={() => handleClick()}
+    >
+      Jugar
+    </button>
+  );
 }

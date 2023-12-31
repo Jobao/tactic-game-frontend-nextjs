@@ -30,7 +30,12 @@ export interface GameUnit {
 
   canAttack: boolean;
 
-  //stats:TupleStats[];
+  stats: [
+    {
+      statsName: string;
+      amount: number;
+    }
+  ];
 
   //equipment:UnitEquiped
 

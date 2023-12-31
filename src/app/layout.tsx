@@ -20,3 +20,4 @@ export default function RootLayout({
     </html>
   );
 }
+//<script src="../../node_modules/flowbite/dist/flowbite.min.js"></script>
