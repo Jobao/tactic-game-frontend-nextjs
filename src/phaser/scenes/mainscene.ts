@@ -12,6 +12,7 @@ export default class MainScene extends Scene {
 	dictionary: Map<string, CustomTile> = new Map();
 	dictionary_player: Map<string, Player> = new Map();
 	selectedUnit: GameUnit | undefined;
+	menu: Phaser.GameObjects.Text | undefined;
 
 	handleSelectedUnit(unit: GameUnit) {
 		if (this.selectedUnit) {
@@ -21,24 +22,31 @@ export default class MainScene extends Scene {
 				this.dictionary
 					.get(this.selectedUnit.posX.toString() + "-" + this.selectedUnit.posY.toString())
 					?.setTint(0x86bfda);
+				//this.menu?.setPosition(this.selectedUnit.posX * 32, this.selectedUnit.posY * 32 - 40, 0, 0);
+				this.menu?.setVisible(true);
 			}
 		} else {
 			this.selectedUnit = unit;
 			this.dictionary
 				.get(this.selectedUnit.posX.toString() + "-" + this.selectedUnit.posY.toString())
 				?.setTint(0x86bfda);
+			//this.menu?.setPosition(this.selectedUnit.posX * 32, this.selectedUnit.posY * 32 - 20, 0, 0);
+			this.menu?.setVisible(true);
 		}
 	}
 
 	handleClickTile(tile: CustomTile) {
 		if (this.selectedUnit) {
 			this.dictionary.get(this.selectedUnit.posX.toString() + "-" + this.selectedUnit.posY.toString())?.clearTint();
+			this.menu?.setVisible(false);
 		}
 	}
 
 	init(gameData: GameData) {
 		this.data_game = gameData;
 		this.selectedUnit = undefined;
+		this.menu = this.add.text(10, 10, "hola");
+		this.menu.setVisible(false).depth = 2;
 	}
 	preload() {
 		this.load.image("pasto", "/tiles/pasto.png");
