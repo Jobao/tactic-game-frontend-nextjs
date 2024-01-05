@@ -1,18 +1,38 @@
 "use client";
 import { Button } from "flowbite-react";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert } from "flowbite-react";
+import { gameContext } from "../contexts/gameContext";
+import { Accordion } from "flowbite";
 
 export function CoordInputGameUnitAction(props: {
   action: string;
   unit_uuid: string;
   handleUpdate: Function;
+  maxX: number;
+  maxY: number;
+  renders: boolean;
 }) {
   const params = useParams();
-  const [x, setX] = useState(Number);
-  const [y, setY] = useState(Number);
   const [lastSlot, setLastSlot] = useState<HTMLElement | null>();
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+
+  useEffect(() => {
+    if (lastSlot) {
+      lastSlot.style.backgroundColor = "white";
+    }
+    setLastSlot(document.getElementById(x.toString() + "-" + y.toString()));
+    if (x && y) {
+    }
+  }, [x, y]);
+
+  useEffect(() => {
+    if (lastSlot && props.renders) {
+      lastSlot.style.backgroundColor = "red";
+    }
+  }, [lastSlot]);
 
   function handleClick() {
     let response = fetch(
@@ -40,55 +60,45 @@ export function CoordInputGameUnitAction(props: {
         x.json().then((res) => {
           if (res.status === "OK") {
             props.handleUpdate();
-          } else {
           }
         });
       }
     });
   }
+
   return (
     <div className=" w-12/12 inline-flex">
       <input
+        value={x}
         className=" w-4/12"
         type="number"
         name="X"
         id="X"
         placeholder="X"
         min={0}
+        max={props.maxX - 1}
         onChange={(e) => {
-          setX(Number.parseInt(e.currentTarget.value));
-          if (y) {
-            if (lastSlot) {
-              lastSlot.style.backgroundColor = "white";
-            }
-            setLastSlot(
-              document.getElementById(x.toString() + "-" + y.toString())
-            );
-            if (lastSlot) {
-              lastSlot.style.backgroundColor = "red";
-            }
+          if (!Number.isNaN(e.currentTarget.valueAsNumber)) {
+            setX(Number.parseInt(e.currentTarget.value));
+          } else {
+            setX(0);
           }
         }}
       />
       <input
+        value={y}
         className=" w-4/12"
         type="number"
         name="Y"
         id="Y"
         placeholder="Y"
         min={0}
+        max={props.maxY - 1}
         onChange={(e) => {
-          setY(Number.parseInt(e.currentTarget.value));
-          if (x) {
-            if (lastSlot) {
-              lastSlot.style.backgroundColor = "white";
-            }
-            setLastSlot(
-              document.getElementById(x.toString() + "-" + y.toString())
-            );
-            if (lastSlot) {
-              lastSlot.style.backgroundColor = "red";
-            }
+          if (!Number.isNaN(e.currentTarget.valueAsNumber)) {
+            setY(Number.parseInt(e.currentTarget.value));
+          } else {
+            setY(0);
           }
         }}
       />

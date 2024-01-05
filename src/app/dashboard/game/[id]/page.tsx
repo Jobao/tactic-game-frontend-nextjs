@@ -1,5 +1,6 @@
 "use client";
 
+import { gameContext } from "@/components/contexts/gameContext";
 import GameBoard from "@/components/gameBoard";
 import GameUnitSelectedTab from "@/components/gameUnitSelectedTab";
 import { Game, GameUnit } from "@/lib/interfaces";
@@ -59,20 +60,23 @@ export default function GameDetails() {
             {...{ game: actGame, onSelectUnitHandle: handleOnSelectUnit }}
           ></GameBoard>
         </div>
-        <div className="w-6/12 border -mr-2">
-          {selectedUnit ? (
-            <GameUnitSelectedTab
-              {...{ gameUnit: selectedUnit, handleUpdate: handleOnChangeValue }}
-            ></GameUnitSelectedTab>
-          ) : (
-            <div>Seleccione una unidad</div>
-          )}
-        </div>
+        <gameContext.Provider value={actGame}>
+          <div className="w-6/12 border -mr-2">
+            {selectedUnit ? (
+              <GameUnitSelectedTab
+                {...{
+                  gameUnit: selectedUnit,
+                  handleUpdate: handleOnChangeValue,
+                }}
+              ></GameUnitSelectedTab>
+            ) : (
+              <div>Seleccione una unidad</div>
+            )}
+          </div>
+        </gameContext.Provider>
       </div>
     );
   } else {
     return <div>Error en la carga del juego</div>;
   }
 }
-
-//key={selectedUnit ? selectedUnit.unitBase_uuid : "0"}

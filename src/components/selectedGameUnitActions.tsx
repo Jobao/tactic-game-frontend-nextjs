@@ -5,16 +5,22 @@ import {
   AccordionContent,
   AccordionPanel,
   AccordionTitle,
-  Toast,
+  AccordionTitleProps,
 } from "flowbite-react";
 import { GameUnit } from "@/lib/interfaces";
 import { CoordInputGameUnitAction } from "./gameUnitActions/coordInpuGameUnitAction";
 import ButtonWaitGameUnitAction from "./gameUnitActions/buttonWaitGameUnitAction";
+import { useContext, useState } from "react";
+import { gameContext } from "./contexts/gameContext";
 
 export default function SelectedGameUnitActions(props: {
   gameUnit: GameUnit;
   handleUpdate: Function;
 }) {
+  const game = useContext(gameContext);
+  const [acordeonMoveOpen, setAcordeonMoveOpen] = useState(true);
+  const [acordeonAtaqueOpen, setAcordeonAtaqueOpen] = useState(true);
+
   return (
     <div className="relative">
       <Accordion collapseAll>
@@ -36,6 +42,9 @@ export default function SelectedGameUnitActions(props: {
                 action: "MOVE",
                 unit_uuid: props.gameUnit?.unitBase_uuid,
                 handleUpdate: props.handleUpdate,
+                maxX: game?.sizeX,
+                maxY: game?.sizeY,
+                renders: acordeonMoveOpen,
               }}
             ></CoordInputGameUnitAction>
           </AccordionContent>
@@ -58,6 +67,9 @@ export default function SelectedGameUnitActions(props: {
                 action: "ATTACK",
                 unit_uuid: props.gameUnit?.unitBase_uuid,
                 handleUpdate: props.handleUpdate,
+                maxX: game?.sizeX,
+                maxY: game?.sizeY,
+                renders: acordeonAtaqueOpen,
               }}
             ></CoordInputGameUnitAction>
           </AccordionContent>
@@ -72,3 +84,5 @@ export default function SelectedGameUnitActions(props: {
     </div>
   );
 }
+
+//TODO: Cuando se cierran los paneles se deberia cancelar la accion
