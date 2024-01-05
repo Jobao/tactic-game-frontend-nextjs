@@ -4,8 +4,15 @@ import { gameContext } from "@/components/contexts/gameContext";
 import GameBoard from "@/components/gameBoard";
 import GameUnitSelectedTab from "@/components/gameUnitSelectedTab";
 import { Game, GameUnit } from "@/lib/interfaces";
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
+const PhaserGameComponentDynamic = dynamic(
+  () => import("@/components/phaser/phaserGame"),
+  {
+    ssr: false,
+  }
+);
 
 export default function GameDetails() {
   const params = useParams();
@@ -55,25 +62,9 @@ export default function GameDetails() {
   if (actGame) {
     return (
       <div className=" flex">
-        <div className=" w-6/12">
-          <GameBoard
-            {...{ game: actGame, onSelectUnitHandle: handleOnSelectUnit }}
-          ></GameBoard>
-        </div>
-        <gameContext.Provider value={actGame}>
-          <div className="w-6/12 border -mr-2">
-            {selectedUnit ? (
-              <GameUnitSelectedTab
-                {...{
-                  gameUnit: selectedUnit,
-                  handleUpdate: handleOnChangeValue,
-                }}
-              ></GameUnitSelectedTab>
-            ) : (
-              <div>Seleccione una unidad</div>
-            )}
-          </div>
-        </gameContext.Provider>
+        <PhaserGameComponentDynamic
+          {...{ gameData: actGame }}
+        ></PhaserGameComponentDynamic>
       </div>
     );
   } else {
