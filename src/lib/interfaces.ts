@@ -1,85 +1,83 @@
 export interface LoginData {
-  user: string;
-  pass: string;
+	user: string;
+	pass: string;
 }
 
 export interface NewGame {
-  sizeX: number; //size del tablero horizontal
+	sizeX: number; //size del tablero horizontal
 
-  sizeY: number; //size del tablero vertical
+	sizeY: number; //size del tablero vertical
 
-  minUnits: number;
+	minUnits: number;
 
-  maxUnits: number;
+	maxUnits: number;
 }
 
 export interface GameUnit {
-  unitBase_uuid: string;
+	unitBase_uuid: string;
 
-  posX: number;
+	posX: number;
 
-  posY: number;
+	posY: number;
 
-  currentHP: number;
+	currentHP: number;
 
-  currentMP: number;
+	currentMP: number;
 
-  canPerformActionThisTurn: boolean;
+	canPerformActionThisTurn: boolean;
 
-  canMove: boolean;
+	canMove: boolean;
 
-  canAttack: boolean;
+	canAttack: boolean;
 
-  stats: [
-    {
-      statsName: string;
-      amount: number;
-    }
-  ];
+	stats: [
+		{
+			statsName: string;
+			amount: number;
+		}
+	];
 
-  //equipment:UnitEquiped
-
-  user_uuid: string;
+	//equipment:UnitEquiped
 }
 
 export interface PlacedUnit {
-  user_uuid: string;
+	user_uuid: string;
 
-  gameUnit: GameUnit[];
+	gameUnit: GameUnit[];
 }
 
 export interface GameOrder {}
 
 export interface Game extends NewGame {
-  _id: string;
+	_id: string;
 
-  placedUnitList: PlacedUnit[];
+	placedUnitList: PlacedUnit[];
 
-  isEnd: boolean;
+	isEnd: boolean;
 
-  isStart: boolean;
+	isStart: boolean;
 
-  owner_uuid: string;
+	owner_uuid: string;
 
-  turn: string;
+	turn: string;
 
-  gamePhase: string;
+	gamePhase: string;
 
-  gameOrder: GameOrder[];
+	gameOrder: GameOrder[];
 }
 
 export interface MoveAction {
-  unit_uuid: string;
+	unit_uuid: string;
 }
 
 export interface UnitAction {
-  type: string;
+	type: string;
 
-  target: Target;
+	target: Target;
 }
 
 export interface Target {
-  x: number;
+	x: number;
 
-  y: number;
+	y: number;
 }
