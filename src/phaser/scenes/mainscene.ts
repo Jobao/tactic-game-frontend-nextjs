@@ -4,8 +4,6 @@ import CustomTile from "../classes/tile";
 import Player from "../classes/player";
 import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import BoardPlugin from "phaser3-rex-plugins/plugins/board-plugin";
-import { Lateef } from "next/font/google";
 import Rectangle from "phaser3-rex-plugins/plugins/utils/geom/rectangle/Rectangle";
 import { Vector2 } from "phaser3-rex-plugins/plugins/utils/geom/types";
 
@@ -17,10 +15,9 @@ export default class MainScene extends Scene {
 	data_game: GameData | undefined = undefined;
 	dictionary: Map<string, CustomTile> = new Map();
 	dictionary_player: Map<string, Player> = new Map();
-	selectedUnit: GameUnit | undefined;
+	selectedUnit: Player | undefined;
 	menu: Menu | undefined;
 	rexUI!: UIPlugin;
-	boardPlugin!: BoardPlugin;
 	terrainLayer!: Phaser.Tilemaps.TilemapLayer | null;
 	playerLayer!: Phaser.Tilemaps.TilemapLayer | null;
 	map!: Phaser.Tilemaps.Tilemap;
@@ -29,7 +26,9 @@ export default class MainScene extends Scene {
 
 	handleClickTile(tile: CustomTile) {
 		if (this.selectedUnit) {
-			this.dictionary.get(this.selectedUnit.posX.toString() + "-" + this.selectedUnit.posY.toString())?.clearTint();
+			this.dictionary
+				.get(this.selectedUnit.unit_data.posX.toString() + "-" + this.selectedUnit.unit_data.posY.toString())
+				?.clearTint();
 			this.selectedUnit = undefined;
 			this.menu = undefined;
 		}
@@ -142,6 +141,7 @@ export default class MainScene extends Scene {
 	}
 
 	create() {
+		this.cameras.main.setBounds(0, 0, 800, 600);
 		var graphics = this.add.graphics({
 			lineStyle: {
 				width: 2,
@@ -171,7 +171,9 @@ export default class MainScene extends Scene {
 					/*const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
 					var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);*/
 					if (this.selectedUnit) {
-						this.terrainLayer?.getTileAt(this.selectedUnit.posX, this.selectedUnit.posY).setAlpha(1);
+						this.terrainLayer
+							?.getTileAt(this.selectedUnit.unit_data.posX, this.selectedUnit.unit_data.posY)
+							.setAlpha(1);
 						this.selectedUnit = undefined;
 					}
 				},
