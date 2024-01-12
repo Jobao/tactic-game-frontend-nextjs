@@ -16,6 +16,6 @@ export default class CustomTile extends Phaser.GameObjects.TileSprite {
 		this.on("pointerdown", () => {
 			handleClick(this);
 		});
-		scene.add.existing(this).setOrigin(0, 0);
+		//scene.add.existing(this).setOrigin(0, 0);
 	}
 }
