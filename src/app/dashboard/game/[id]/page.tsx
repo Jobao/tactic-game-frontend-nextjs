@@ -1,12 +1,11 @@
 "use client";
 
-import { gameContext, useGameContext } from "@/components/contexts/gameContext";
-import GameBoard from "@/components/gameBoard";
-import GameUnitSelectedTab from "@/components/gameUnitSelectedTab";
 import { Game, GameUnit } from "@/lib/interfaces";
+import { STORE } from "@/lib/redux/store";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import { useState, useEffect, Suspense, useContext, createContext } from "react";
+import { useState, useEffect } from "react";
+import { Provider } from "react-redux";
 const PhaserGameComponentDynamic = dynamic(() => import("@/components/phaser/phaserGame"), {
 	ssr: false,
 });
@@ -58,9 +57,11 @@ export default function GameDetails() {
 
 	if (actGame) {
 		return (
-			<div className=" flex">
-				<PhaserGameComponentDynamic {...{ gameData: actGame }}></PhaserGameComponentDynamic>
-			</div>
+			<Provider store={STORE}>
+				<div className=" flex">
+					<PhaserGameComponentDynamic {...{ gameData: actGame }}></PhaserGameComponentDynamic>
+				</div>
+			</Provider>
 		);
 	} else {
 		return <div>Error en la carga del juego</div>;

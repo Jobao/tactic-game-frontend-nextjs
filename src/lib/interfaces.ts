@@ -64,6 +64,8 @@ export interface Game extends NewGame {
 	gamePhase: string;
 
 	gameOrder: GameOrder[];
+
+	store: any;
 }
 
 export interface MoveAction {

@@ -2,6 +2,7 @@ import { GameUnit } from "@/lib/interfaces";
 import { Scene } from "phaser";
 import MainScene from "../scenes/mainscene";
 import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components";
+import { STORE, setGameState, setSelectedUnit, setUnitData } from "@/lib/redux/store";
 
 export default class Player extends Phaser.GameObjects.Sprite {
 	constructor(
@@ -20,30 +21,30 @@ export default class Player extends Phaser.GameObjects.Sprite {
 		this.setDepth(2);
 		this.setInteractive();
 
-		this.menu = this.createMenu(scene, this.items, () => {});
+		//this.menu = this.createMenu(scene, this.items, () => {});
 		//this.mainScene.rexUI.hide(this.menu);
 		this.on(
 			"pointerdown",
 			() => {
-				var tile = scene.terrainLayer?.getTileAt(this.unit_data.posX, this.unit_data.posY);
-
-				if (scene.selectedUnit) {
-					if (scene.selectedUnit.unit_data.unitBase_uuid !== this.unit_data.unitBase_uuid) {
-						var oldTile = scene.terrainLayer?.getTileAt(
-							scene.selectedUnit.unit_data.posX,
-							scene.selectedUnit.unit_data.posY
-						);
-						//console.log(terrainLayer?.getTileAt(x, y));
-						oldTile?.setAlpha(1);
-						scene.selectedUnit.closeMenu();
-						scene.selectedUnit = this;
-						tile?.setAlpha(0.5);
-						this.openMenu.bind(this);
-					}
-				} else {
+				let cacheStore = STORE.getState().value;
+				if (cacheStore.gameState === 'NONE' || cacheStore.gameState === 'IDLE') {
+					var tile = scene.terrainLayer?.getTileAt(this.unit_data.posX, this.unit_data.posY);
+	
+					if (cacheStore.unitData.unitBase_uuid !== '') {
+						if (cacheStore.unitData.unitBase_uuid !== this.unit_data.unitBase_uuid) {
+							var oldTile = scene.terrainLayer?.getTileAt(
+								cacheStore.unitData.posX,
+								cacheStore.unitData.posY
+							);
+							//console.log(terrainLayer?.getTileAt(x, y));
+							oldTile?.setAlpha(1);
+						}
+					} 
 					scene.selectedUnit = this;
 					tile?.setAlpha(0.5);
-					this.openMenu.bind(this);
+					STORE.dispatch(setGameState('IDLE'))
+					STORE.dispatch(setSelectedUnit(true));
+					STORE.dispatch(setUnitData(scene.selectedUnit.unit_data))
 				}
 			},
 			this

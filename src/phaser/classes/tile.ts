@@ -1,3 +1,4 @@
+import { STORE, setSelectedUnit } from "@/lib/redux/store";
 import { Scene, Tilemaps } from "phaser";
 
 export default class CustomTile extends Phaser.GameObjects.TileSprite {
@@ -14,7 +15,8 @@ export default class CustomTile extends Phaser.GameObjects.TileSprite {
 		super(scene, x, y, w, h, key, frame);
 		this.setInteractive();
 		this.on("pointerdown", () => {
-			handleClick(this);
+			//handleClick(this);
+			console.log("terr");
 		});
 		//scene.add.existing(this).setOrigin(0, 0);
 	}

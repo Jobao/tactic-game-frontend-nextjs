@@ -8,64 +8,17 @@ import ScenePrueba from "@/phaser/scenes/scenePrueba";
 import Demo from "@/phaser/scenes/pp.js";
 import BoardPlugin from "phaser3-rex-plugins/plugins/board-plugin";
 import { Button } from "flowbite-react";
+import { setSelectedUnit, prueba, STORE, IRootState, setGameState } from "@/lib/redux/store";
+import { createSlice, configureStore } from "@reduxjs/toolkit";
+import { Provider, useSelector } from "react-redux";
 
 export default function PhaserGame(props: { gameData: GameData }) {
 	const [isReady, setReady] = useState(false);
 	const [game, setGame] = useState<Game | null>(null);
 	const parentEl = useRef<HTMLDivElement>(null);
 	const [sceneM, setSceneM] = useState<MainScene>();
+	const x = useSelector((state: IRootState) => state.value.selectedUnit);
 
-	/*useEffect(() => {
-		async function initPhaser() {
-			const Phaser = await import("phaser");
-
-			if (game) {
-				return;
-			}
-			if (!parentEl.current) {
-				return;
-			}
-
-			const newGame = new Game({
-				type: Phaser.AUTO,
-				parent: parentEl.current,
-				title: "game",
-				width: 800,
-				height: 600,
-				pixelArt: true,
-				scene: [],
-				scale: {
-					mode: Phaser.Scale.FIT,
-					width: 800,
-					height: 600,
-				},
-				plugins: {
-					scene: [
-						{
-							key: "rexUI",
-							plugin: UIPlugin,
-							mapping: "rexUI",
-						},
-						{
-							key: "boardPlugin",
-							plugin: BoardPlugin,
-							mapping: "boardPlugin",
-						},
-						// ...
-					],
-				},
-			});
-			newGame.scene.add("main", MainScene, false);
-
-			setGame(newGame);
-		}
-		initPhaser();
-		return () => {
-			setReady(false)
-			game.destroy(true)
-		  }
-	}, []);
-*/
 	useEffect(() => {
 		if (game) {
 			return;
@@ -84,8 +37,10 @@ export default function PhaserGame(props: { gameData: GameData }) {
 			scene: [],
 			scale: {
 				mode: Phaser.Scale.FIT,
-				width: 800,
-				height: 600,
+				min: {
+					width: 800,
+					height: 600,
+				},
 			},
 			plugins: {
 				scene: [
@@ -121,19 +76,24 @@ export default function PhaserGame(props: { gameData: GameData }) {
 	}, [game]);
 
 	return (
-		<div ref={parentEl} className=" static" style={{ width: 800, height: 600 }}>
-			<div className=" absolute bottom-2/4 left-2/4 text-white">
-				<p>Hola Mundo</p>
-			</div>
-			<div>
-				<Button
-					{...{ disabled: !sceneM?.selectedUnit }}
-					onClick={() => {
-						console.log(sceneM?.selectedUnit?.unit_data.unitBase_uuid);
-					}}
-				>
-					prueba
-				</Button>
+		<div className=" relative inline">
+			<div ref={parentEl} className=""></div>
+			<div id="UI" className=" absolute top-0 border-2" style={{ width: 800, height: 600, marginLeft: 801 }}>
+				<div className=" absolute bottom-2/4 left-2/4 text-black">
+					<p>Hola Mundo</p>
+				</div>
+				<div>
+					<Button
+						{...{ disabled: !x }}
+						onClick={() => {
+							if(STORE.getState().value.selectedUnit){
+								STORE.dispatch(setGameState('WAIT_FOR_MOVE'))
+							}
+						}}
+					>
+						mover
+					</Button>
+				</div>
 			</div>
 		</div>
 	);

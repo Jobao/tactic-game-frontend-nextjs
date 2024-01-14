@@ -6,6 +6,8 @@ import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 import Rectangle from "phaser3-rex-plugins/plugins/utils/geom/rectangle/Rectangle";
 import { Vector2 } from "phaser3-rex-plugins/plugins/utils/geom/types";
+import { setSelectedUnit, prueba, STORE, setUnitData, setGameState } from "@/lib/redux/store";
+import { createSlice, configureStore } from "@reduxjs/toolkit";
 
 export default class MainScene extends Scene {
 	constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
@@ -89,53 +91,7 @@ export default class MainScene extends Scene {
 					},
 				});
 			},
-		}); /*
-		var menu = scene.rexUI.add.menu({
-			x: 10,
-			y: 10,
-			//orientation:{},
-			subMenuSide: "right",
-
-			//popup: false,
-			items: items,
-			createBackgroundCallback: (items) => {
-				return scene.rexUI.add.roundRectangle(0, 0, 2, 2, 0, COLOR_PRIMARY);
-			},
-			createButtonCallback: (item, i, items) => {
-				return scene.rexUI.add.label({
-					background: scene.rexUI.add.roundRectangle(0, 0, 2, 2, 0),
-					text: scene.add.text(0, 0, item.name, {
-						fontSize: "20px",
-					}),
-					icon: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 10, COLOR_DARK),
-					space: {
-						left: 10,
-						right: 10,
-						top: 10,
-						bottom: 10,
-						icon: 10,
-					},
-				});
-			},
 		});
-		/*
-		menu
-			.on("button.over", function (button: any) {
-				button.getElement("background").setStrokeStyle(1, 0xffffff);
-			})
-			.on("button.out", function (button: any) {
-				button.getElement("background").setStrokeStyle();
-			})
-			.on("button.click", function (button: any) {
-				onClick(button);
-			})
-			.on("popup.complete", function (subMenu: any) {
-				console.log("popup.complete");
-			})
-			.on("scaledown.complete", function () {
-				console.log("scaledown.complete");
-			});
-*/
 
 		return menu2;
 	}
@@ -170,11 +126,30 @@ export default class MainScene extends Scene {
 				(pointer: Phaser.Input.Pointer, currently: any) => {
 					/*const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
 					var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);*/
-					if (this.selectedUnit) {
-						this.terrainLayer
-							?.getTileAt(this.selectedUnit.unit_data.posX, this.selectedUnit.unit_data.posY)
-							.setAlpha(1);
-						this.selectedUnit = undefined;
+					if(STORE.getState().value.gameState === 'WAIT_FOR_MOVE'){
+						const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
+						var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
+						if(this.terrainLayer && c){
+							//this.calcularVecinos(3, this.terrainLayer, c)
+						}
+						
+						STORE.dispatch(setGameState('IDLE'))
+						
+						//console.log(c?.x.toString() + '-' +c?.y.toString() );
+						//MOVER
+					}
+					else{
+						if(STORE.getState().value.gameState === 'IDLE'){
+							if (STORE.getState().value.unitData) {
+								this.terrainLayer
+									?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY)
+									.setAlpha(1);
+								this.selectedUnit = undefined;
+								STORE.dispatch(setGameState('NONE'))
+								STORE.dispatch(setUnitData(undefined))
+								STORE.dispatch(setSelectedUnit(false));
+							}
+						}
 					}
 				},
 				this
@@ -198,5 +173,37 @@ export default class MainScene extends Scene {
 	update(time: number, delta: number): void {
 		const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main);
 		//this.layer?.worldToTileX()
+	}
+
+	calcularVecinos(dist:number, layer:Phaser.Tilemaps.TilemapLayer, tile:Phaser.Tilemaps.Tile){
+		let d = [];
+		console.log(tile.x.toString() + ':' + tile.y.toString());
+		for (let index = 1; index < dist+1; index++) {
+			
+			//---//
+			d.push(layer.getTileAt(tile.x, tile.y-index));
+			d.push(layer.getTileAt(tile.x , tile.y+index));
+			d.push(layer.getTileAt(tile.x -index, tile.y));
+			d.push(layer.getTileAt(tile.x +index, tile.y));
+			if(index === 2 ){
+				d.push(layer.getTileAt(tile.x +1, tile.y+1));
+				d.push(layer.getTileAt(tile.x +1, tile.y-1));
+				d.push(layer.getTileAt(tile.x -1, tile.y+1));
+				d.push(layer.getTileAt(tile.x -1, tile.y-1));
+			}
+			if(index === 3){
+
+			}
+			
+		}
+
+		d.forEach(element => {
+			if(element){
+				element.tint = 255;
+				//console.log(element.x.toString() + ':' + element.y.toString());
+			}
+			
+			
+		});
 	}
 }
