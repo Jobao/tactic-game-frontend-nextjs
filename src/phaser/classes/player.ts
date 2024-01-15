@@ -5,14 +5,7 @@ import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components";
 import { STORE, setGameState, setSelectedUnit, setUnitData } from "@/lib/redux/store";
 
 export default class Player extends Phaser.GameObjects.Sprite {
-	constructor(
-		scene: MainScene,
-		x: number,
-		y: number,
-		key: string,
-		frame: string | number | undefined,
-		_unit_data: GameUnit
-	) {
+	constructor(scene: MainScene, x: number, y: number, key: string, frame: string | number | undefined, _unit_data: GameUnit) {
 		super(scene, x, y, key, frame);
 		this.mainScene = scene;
 		this.unit_data = _unit_data;
@@ -27,24 +20,24 @@ export default class Player extends Phaser.GameObjects.Sprite {
 			"pointerdown",
 			() => {
 				let cacheStore = STORE.getState().value;
-				if (cacheStore.gameState === 'NONE' || cacheStore.gameState === 'IDLE') {
+				if (cacheStore.gameState === "NONE" || cacheStore.gameState === "IDLE") {
 					var tile = scene.terrainLayer?.getTileAt(this.unit_data.posX, this.unit_data.posY);
-	
-					if (cacheStore.unitData.unitBase_uuid !== '') {
+
+					if (cacheStore.unitData.unitBase_uuid !== "") {
 						if (cacheStore.unitData.unitBase_uuid !== this.unit_data.unitBase_uuid) {
-							var oldTile = scene.terrainLayer?.getTileAt(
-								cacheStore.unitData.posX,
-								cacheStore.unitData.posY
-							);
+							var oldTile = scene.terrainLayer?.getTileAt(cacheStore.unitData.posX, cacheStore.unitData.posY);
 							//console.log(terrainLayer?.getTileAt(x, y));
 							oldTile?.setAlpha(1);
 						}
-					} 
+					}
 					scene.selectedUnit = this;
 					tile?.setAlpha(0.5);
-					STORE.dispatch(setGameState('IDLE'))
+					STORE.dispatch(setGameState("IDLE"));
 					STORE.dispatch(setSelectedUnit(true));
-					STORE.dispatch(setUnitData(scene.selectedUnit.unit_data))
+					STORE.dispatch(setUnitData(scene.selectedUnit.unit_data));
+				}
+
+				if (cacheStore.gameState === "WAIT_FOR_ATTACK") {
 				}
 			},
 			this
@@ -180,7 +173,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 		return menu2;
 	}
 
-	updateUnitData(){
-		this.unit_data = STORE.getState().value.unitData
+	updateUnitData() {
+		this.unit_data = STORE.getState().value.unitData;
 	}
 }

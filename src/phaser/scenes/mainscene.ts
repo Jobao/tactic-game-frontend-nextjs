@@ -29,9 +29,7 @@ export default class MainScene extends Scene {
 
 	handleClickTile(tile: CustomTile) {
 		if (this.selectedUnit) {
-			this.dictionary
-				.get(this.selectedUnit.unit_data.posX.toString() + "-" + this.selectedUnit.unit_data.posY.toString())
-				?.clearTint();
+			this.dictionary.get(this.selectedUnit.unit_data.posX.toString() + "-" + this.selectedUnit.unit_data.posY.toString())?.clearTint();
 			this.selectedUnit = undefined;
 			this.menu = undefined;
 		}
@@ -125,48 +123,40 @@ export default class MainScene extends Scene {
 			this.terrainLayer?.on(
 				"pointerdown",
 				(pointer: Phaser.Input.Pointer, currently: any) => {
-					/*const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
-					var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);*/
-					if(STORE.getState().value.gameState === 'WAIT_FOR_MOVE'){
-						const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
-						var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
-						if(this.terrainLayer && c){
-							MovePlayer(STORE.getState().value.unitData.unitBase_uuid,this.data_game?._id,c.x, c.y ).then((x)=>{
-								if(x){
-									if(c){
-										this.terrainLayer
-									?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY)
-									.setAlpha(1);
-										this.selectedUnit?.setPosition(c?.x*32, c?.y*32)
-										STORE.dispatch(setUnitPosition({x:c?.x, y:c?.y}))
-										this.terrainLayer
-									?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY)
-									.setAlpha(0.5);
+					switch (STORE.getState().value.gameState) {
+						case "WAIT_FOR_MOVE":
+							const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
+							var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
+							if (this.terrainLayer && c) {
+								MovePlayer(STORE.getState().value.unitData.unitBase_uuid, this.data_game?._id, c.x, c.y).then((x) => {
+									if (x) {
+										if (c) {
+											this.terrainLayer?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY).setAlpha(1);
+											this.selectedUnit?.setPosition(c?.x * 32, c?.y * 32);
+											STORE.dispatch(setUnitPosition({ x: c?.x, y: c?.y }));
+											this.terrainLayer?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY).setAlpha(0.5);
+										}
+										this.selectedUnit?.updateUnitData();
 									}
-									this.selectedUnit?.updateUnitData()
-									
-								}
-							})
+								});
+							}
 
-						}
-						
-						STORE.dispatch(setGameState('IDLE'))
-						
-						//console.log(c?.x.toString() + '-' +c?.y.toString() );
-						//MOVER
-					}
-					else{
-						if(STORE.getState().value.gameState === 'IDLE'){
+							STORE.dispatch(setGameState("IDLE"));
+							break;
+						case "IDLE":
 							if (STORE.getState().value.unitData) {
-								this.terrainLayer
-									?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY)
-									.setAlpha(1);
+								this.terrainLayer?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY).setAlpha(1);
 								this.selectedUnit = undefined;
-								STORE.dispatch(setGameState('NONE'))
-								STORE.dispatch(setUnitData(undefined))
+								STORE.dispatch(setGameState("NONE"));
+								STORE.dispatch(setUnitData(undefined));
 								STORE.dispatch(setSelectedUnit(false));
 							}
-						}
+							break;
+						case "WAIT_FOR_ATTACK":
+							break;
+
+						default:
+							break;
 					}
 				},
 				this
@@ -192,35 +182,30 @@ export default class MainScene extends Scene {
 		//this.layer?.worldToTileX()
 	}
 
-	calcularVecinos(dist:number, layer:Phaser.Tilemaps.TilemapLayer, tile:Phaser.Tilemaps.Tile){
+	calcularVecinos(dist: number, layer: Phaser.Tilemaps.TilemapLayer, tile: Phaser.Tilemaps.Tile) {
 		let d = [];
-		console.log(tile.x.toString() + ':' + tile.y.toString());
-		for (let index = 1; index < dist+1; index++) {
-			
+		console.log(tile.x.toString() + ":" + tile.y.toString());
+		for (let index = 1; index < dist + 1; index++) {
 			//---//
-			d.push(layer.getTileAt(tile.x, tile.y-index));
-			d.push(layer.getTileAt(tile.x , tile.y+index));
-			d.push(layer.getTileAt(tile.x -index, tile.y));
-			d.push(layer.getTileAt(tile.x +index, tile.y));
-			if(index === 2 ){
-				d.push(layer.getTileAt(tile.x +1, tile.y+1));
-				d.push(layer.getTileAt(tile.x +1, tile.y-1));
-				d.push(layer.getTileAt(tile.x -1, tile.y+1));
-				d.push(layer.getTileAt(tile.x -1, tile.y-1));
+			d.push(layer.getTileAt(tile.x, tile.y - index));
+			d.push(layer.getTileAt(tile.x, tile.y + index));
+			d.push(layer.getTileAt(tile.x - index, tile.y));
+			d.push(layer.getTileAt(tile.x + index, tile.y));
+			if (index === 2) {
+				d.push(layer.getTileAt(tile.x + 1, tile.y + 1));
+				d.push(layer.getTileAt(tile.x + 1, tile.y - 1));
+				d.push(layer.getTileAt(tile.x - 1, tile.y + 1));
+				d.push(layer.getTileAt(tile.x - 1, tile.y - 1));
 			}
-			if(index === 3){
-
+			if (index === 3) {
 			}
-			
 		}
 
-		d.forEach(element => {
-			if(element){
+		d.forEach((element) => {
+			if (element) {
 				element.tint = 255;
 				//console.log(element.x.toString() + ':' + element.y.toString());
 			}
-			
-			
 		});
 	}
 }

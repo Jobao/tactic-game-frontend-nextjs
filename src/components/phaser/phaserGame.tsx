@@ -17,7 +17,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 	const [game, setGame] = useState<Game | null>(null);
 	const parentEl = useRef<HTMLDivElement>(null);
 	const [sceneM, setSceneM] = useState<MainScene>();
-	const x = useSelector((state: IRootState) => state.value.selectedUnit);
+	const x = useSelector((state: IRootState) => state.value);
 
 	useEffect(() => {
 		if (game) {
@@ -78,20 +78,35 @@ export default function PhaserGame(props: { gameData: GameData }) {
 	return (
 		<div className=" relative inline">
 			<div ref={parentEl} className=""></div>
-			<div id="UI" className=" absolute top-0 border-2" style={{ width: 800, height: 600, marginLeft: 801 }}>
-				<div className=" absolute bottom-2/4 left-2/4 text-black">
-					<p>Hola Mundo</p>
+			<div id="UI" className=" absolute top-0 border-2 flex" style={{ width: 800, height: 600, marginLeft: 801 }}>
+				<div className=" text-black border-2 w-1/3">
+					<div id="container-text">
+						<p>Game Status: {STORE.getState().value.gameState}</p>
+						<hr />
+					</div>
 				</div>
+
 				<div>
 					<Button
 						{...{ disabled: !x }}
 						onClick={() => {
-							if(STORE.getState().value.selectedUnit){
-								STORE.dispatch(setGameState('WAIT_FOR_MOVE'))
+							if (STORE.getState().value.selectedUnit) {
+								STORE.dispatch(setGameState("WAIT_FOR_MOVE"));
 							}
 						}}
 					>
-						mover
+						Mover
+					</Button>
+
+					<Button
+						{...{ disabled: !x.selectedUnit }}
+						onClick={() => {
+							if (STORE.getState().value.selectedUnit) {
+								STORE.dispatch(setGameState("WAIT_FOR_ATTACK"));
+							}
+						}}
+					>
+						Atacar
 					</Button>
 				</div>
 			</div>
