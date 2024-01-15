@@ -47,12 +47,16 @@ export const prueba = createSlice({
 			else{
 				state.value.unitData = GameDataInitial;
 			}
-			
 		},
+
+		setUnitPosition:(state, nPos:PayloadAction<{x:number, y:number}>)=>{
+			state.value.unitData.posX = nPos.payload.x;
+			state.value.unitData.posY = nPos.payload.y;
+		}
 	},
 });
 
-export const { setSelectedUnit, setGameState, setUnitData } = prueba.actions;
+export const { setSelectedUnit, setGameState, setUnitData, setUnitPosition } = prueba.actions;
 
 export type IRootState = ReturnType<typeof prueba.reducer>;
 

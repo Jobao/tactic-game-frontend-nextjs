@@ -65,7 +65,9 @@ export interface Game extends NewGame {
 
 	gameOrder: GameOrder[];
 
-	store: any;
+	game_uuid:string
+
+
 }
 
 export interface MoveAction {

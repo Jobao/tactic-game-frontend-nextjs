@@ -30,6 +30,8 @@ export default function GameDetails() {
 					if (x.status === 200) {
 						x.json().then((y) => {
 							setActGame(y);
+							if(actGame)
+								actGame.game_uuid = params.id.toString();
 						});
 					} else {
 						if (x.status === 401) {

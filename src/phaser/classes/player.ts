@@ -179,4 +179,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
 		//menu2.collapse();
 		return menu2;
 	}
+
+	updateUnitData(){
+		this.unit_data = STORE.getState().value.unitData
+	}
 }

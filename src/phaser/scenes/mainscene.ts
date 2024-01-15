@@ -6,15 +6,16 @@ import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 import Rectangle from "phaser3-rex-plugins/plugins/utils/geom/rectangle/Rectangle";
 import { Vector2 } from "phaser3-rex-plugins/plugins/utils/geom/types";
-import { setSelectedUnit, prueba, STORE, setUnitData, setGameState } from "@/lib/redux/store";
+import { setSelectedUnit, prueba, STORE, setUnitData, setGameState, setUnitPosition } from "@/lib/redux/store";
 import { createSlice, configureStore } from "@reduxjs/toolkit";
+import { MovePlayer } from "@/lib/data";
 
 export default class MainScene extends Scene {
 	constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
 		super(config);
 		this.selectedUnit = undefined;
 	}
-	data_game: GameData | undefined = undefined;
+	data_game!: GameData;
 	dictionary: Map<string, CustomTile> = new Map();
 	dictionary_player: Map<string, Player> = new Map();
 	selectedUnit: Player | undefined;
@@ -130,7 +131,23 @@ export default class MainScene extends Scene {
 						const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
 						var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
 						if(this.terrainLayer && c){
-							//this.calcularVecinos(3, this.terrainLayer, c)
+							MovePlayer(STORE.getState().value.unitData.unitBase_uuid,this.data_game?._id,c.x, c.y ).then((x)=>{
+								if(x){
+									if(c){
+										this.terrainLayer
+									?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY)
+									.setAlpha(1);
+										this.selectedUnit?.setPosition(c?.x*32, c?.y*32)
+										STORE.dispatch(setUnitPosition({x:c?.x, y:c?.y}))
+										this.terrainLayer
+									?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY)
+									.setAlpha(0.5);
+									}
+									this.selectedUnit?.updateUnitData()
+									
+								}
+							})
+
 						}
 						
 						STORE.dispatch(setGameState('IDLE'))
