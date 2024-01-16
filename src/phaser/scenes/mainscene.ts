@@ -6,7 +6,7 @@ import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components.js";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 import Rectangle from "phaser3-rex-plugins/plugins/utils/geom/rectangle/Rectangle";
 import { Vector2 } from "phaser3-rex-plugins/plugins/utils/geom/types";
-import { setSelectedUnit, prueba, STORE, setUnitData, setGameState, setUnitPosition } from "@/lib/redux/store";
+import { setSelectedUnit, gameStore, STORE, setUnitData, setGameState, setUnitPosition } from "@/lib/redux/store";
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 import { MovePlayer } from "@/lib/data";
 
@@ -123,18 +123,22 @@ export default class MainScene extends Scene {
 			this.terrainLayer?.on(
 				"pointerdown",
 				(pointer: Phaser.Input.Pointer, currently: any) => {
-					switch (STORE.getState().value.gameState) {
+					switch (STORE.getState().gameDataStore.gameState) {
 						case "WAIT_FOR_MOVE":
 							const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
 							var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
 							if (this.terrainLayer && c) {
-								MovePlayer(STORE.getState().value.unitData.unitBase_uuid, this.data_game?._id, c.x, c.y).then((x) => {
+								MovePlayer(STORE.getState().gameDataStore.unitData.unitBase_uuid, this.data_game?._id, c.x, c.y).then((x) => {
 									if (x) {
 										if (c) {
-											this.terrainLayer?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY).setAlpha(1);
+											this.terrainLayer
+												?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY)
+												.setAlpha(1);
 											this.selectedUnit?.setPosition(c?.x * 32, c?.y * 32);
 											STORE.dispatch(setUnitPosition({ x: c?.x, y: c?.y }));
-											this.terrainLayer?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY).setAlpha(0.5);
+											this.terrainLayer
+												?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY)
+												.setAlpha(0.5);
 										}
 										this.selectedUnit?.updateUnitData();
 									}
@@ -144,8 +148,8 @@ export default class MainScene extends Scene {
 							STORE.dispatch(setGameState("IDLE"));
 							break;
 						case "IDLE":
-							if (STORE.getState().value.unitData) {
-								this.terrainLayer?.getTileAt(STORE.getState().value.unitData.posX, STORE.getState().value.unitData.posY).setAlpha(1);
+							if (STORE.getState().gameDataStore.unitData) {
+								this.terrainLayer?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY).setAlpha(1);
 								this.selectedUnit = undefined;
 								STORE.dispatch(setGameState("NONE"));
 								STORE.dispatch(setUnitData(undefined));

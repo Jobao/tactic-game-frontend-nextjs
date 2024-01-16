@@ -1,3 +1,5 @@
+import { AttributesName } from "../../../tactic-game-backend-nestjs/src/game/schemas/enums";
+
 export interface LoginData {
 	user: string;
 	pass: string;
@@ -65,9 +67,7 @@ export interface Game extends NewGame {
 
 	gameOrder: GameOrder[];
 
-	game_uuid:string
-
-
+	game_uuid: string;
 }
 
 export interface MoveAction {
@@ -84,4 +84,25 @@ export interface Target {
 	x: number;
 
 	y: number;
+}
+
+export interface UnitClass {
+	_id: string; //Es su nombre
+
+	baseAttributes: TupleAttribute[];
+
+	requiredClass: TupleRequiredClass[];
+
+	requiredExp: number[];
+}
+
+export interface TupleAttribute {
+	attributeName: AttributesName;
+
+	amount: number;
+}
+
+export interface TupleRequiredClass {
+	_id: string;
+	experience: number;
 }

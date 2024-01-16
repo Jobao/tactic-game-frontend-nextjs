@@ -8,7 +8,7 @@ import ScenePrueba from "@/phaser/scenes/scenePrueba";
 import Demo from "@/phaser/scenes/pp.js";
 import BoardPlugin from "phaser3-rex-plugins/plugins/board-plugin";
 import { Button } from "flowbite-react";
-import { setSelectedUnit, prueba, STORE, IRootState, setGameState } from "@/lib/redux/store";
+import { setSelectedUnit, gameStore, STORE, IGameStoreState, setGameState } from "@/lib/redux/store";
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 import { Provider, useSelector } from "react-redux";
 
@@ -17,7 +17,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 	const [game, setGame] = useState<Game | null>(null);
 	const parentEl = useRef<HTMLDivElement>(null);
 	const [sceneM, setSceneM] = useState<MainScene>();
-	const x = useSelector((state: IRootState) => state.value);
+	const x = useSelector((state: IGameStoreState) => state.gameDataStore);
 
 	useEffect(() => {
 		if (game) {
@@ -81,7 +81,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 			<div id="UI" className=" absolute top-0 border-2 flex" style={{ width: 800, height: 600, marginLeft: 801 }}>
 				<div className=" text-black border-2 w-1/3">
 					<div id="container-text">
-						<p>Game Status: {STORE.getState().value.gameState}</p>
+						<p>Game Status: {STORE.getState().gameDataStore.gameState}</p>
 						<hr />
 					</div>
 				</div>
@@ -90,7 +90,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 					<Button
 						{...{ disabled: !x }}
 						onClick={() => {
-							if (STORE.getState().value.selectedUnit) {
+							if (STORE.getState().gameDataStore.selectedUnit) {
 								STORE.dispatch(setGameState("WAIT_FOR_MOVE"));
 							}
 						}}
@@ -101,7 +101,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 					<Button
 						{...{ disabled: !x.selectedUnit }}
 						onClick={() => {
-							if (STORE.getState().value.selectedUnit) {
+							if (STORE.getState().gameDataStore.selectedUnit) {
 								STORE.dispatch(setGameState("WAIT_FOR_ATTACK"));
 							}
 						}}

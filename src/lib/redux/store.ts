@@ -1,8 +1,8 @@
 import Player from "@/phaser/classes/player";
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
 import { GameUnit } from "@/lib/interfaces";
-const posiblesStates = ['NONE',"IDLE", "WAIT_FOR_MOVE", "WAIT_FOR_ATTACK"];
-const GameDataInitial: GameUnit= {
+const posiblesStates = ["NONE", "IDLE", "WAIT_FOR_MOVE", "WAIT_FOR_ATTACK"];
+const GameDataInitial: GameUnit = {
 	unitBase_uuid: "",
 	posX: 0,
 	posY: 0,
@@ -14,11 +14,11 @@ const GameDataInitial: GameUnit= {
 	stats: [{ statsName: "", amount: 0 }],
 };
 
-export const prueba = createSlice({
-	name: "selectedPlayer",
+export const gameStore = createSlice({
+	name: "gameStore",
 
 	initialState: {
-		value: {
+		gameDataStore: {
 			selectedUnit: false,
 			gameState: "NONE",
 			unitData: GameDataInitial,
@@ -26,7 +26,7 @@ export const prueba = createSlice({
 	},
 	reducers: {
 		setSelectedUnit: (state, selected: PayloadAction<boolean>) => {
-			state.value.selectedUnit = selected.payload;
+			state.gameDataStore.selectedUnit = selected.payload;
 		},
 		setGameState: (state, nState: PayloadAction<string>) => {
 			if (
@@ -34,32 +34,31 @@ export const prueba = createSlice({
 					return x === nState.payload;
 				})
 			) {
-				state.value.gameState = nState.payload;
+				state.gameDataStore.gameState = nState.payload;
 			} else {
 				console.log("error");
 			}
 		},
 
 		setUnitData: (state, unit: PayloadAction<GameUnit | undefined>) => {
-			if(unit.payload){
-				state.value.unitData = unit.payload;
-			}
-			else{
-				state.value.unitData = GameDataInitial;
+			if (unit.payload) {
+				state.gameDataStore.unitData = unit.payload;
+			} else {
+				state.gameDataStore.unitData = GameDataInitial;
 			}
 		},
 
-		setUnitPosition:(state, nPos:PayloadAction<{x:number, y:number}>)=>{
-			state.value.unitData.posX = nPos.payload.x;
-			state.value.unitData.posY = nPos.payload.y;
-		}
+		setUnitPosition: (state, nPos: PayloadAction<{ x: number; y: number }>) => {
+			state.gameDataStore.unitData.posX = nPos.payload.x;
+			state.gameDataStore.unitData.posY = nPos.payload.y;
+		},
 	},
 });
 
-export const { setSelectedUnit, setGameState, setUnitData, setUnitPosition } = prueba.actions;
+export const { setSelectedUnit, setGameState, setUnitData, setUnitPosition } = gameStore.actions;
 
-export type IRootState = ReturnType<typeof prueba.reducer>;
+export type IGameStoreState = ReturnType<typeof gameStore.reducer>;
 
 export const STORE = configureStore({
-	reducer: prueba.reducer,
+	reducer: gameStore.reducer,
 });

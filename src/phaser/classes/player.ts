@@ -19,7 +19,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 		this.on(
 			"pointerdown",
 			() => {
-				let cacheStore = STORE.getState().value;
+				let cacheStore = STORE.getState().gameDataStore;
 				if (cacheStore.gameState === "NONE" || cacheStore.gameState === "IDLE") {
 					var tile = scene.terrainLayer?.getTileAt(this.unit_data.posX, this.unit_data.posY);
 
@@ -174,6 +174,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
 	}
 
 	updateUnitData() {
-		this.unit_data = STORE.getState().value.unitData;
+		this.unit_data = STORE.getState().gameDataStore.unitData;
 	}
 }
