@@ -47,21 +47,34 @@ export default function UserProfile() {
 
 		return result;
 	}
-	function calcularExpProgress(x: Unit) {
+	function calcularExpProgress(x: Unit, main: boolean) {
 		let aux: number | undefined = 0;
 		let tuple = x.classExperience.find((e) => {
-			return e._id === x.defaultMainClassId;
+			if (main) {
+				return e._id === x.defaultMainClassId;
+			} else {
+				return e._id === x.defaultSecondClassId;
+			}
 		});
 		if (tuple) {
-			aux = allClases.find((y) => {
-				return y._id === x.defaultMainClassId;
-			})?.requiredExp[tuple?.currentClassLevel];
-			if (aux) {
-				return tuple.currentExperience / aux;
+			if (main) {
+				aux = allClases.find((y) => {
+					return y._id === x.defaultMainClassId;
+				})?.requiredExp[tuple?.currentClassLevel];
+				if (aux) {
+					return tuple.currentExperience / aux;
+				}
+			} else {
+				aux = allClases.find((y) => {
+					return y._id === x.defaultSecondClassId;
+				})?.requiredExp[tuple?.currentClassLevel];
+				if (aux) {
+					return tuple.currentExperience / aux;
+				}
 			}
 		}
 
-		return;
+		return 0;
 	}
 	return (
 		<div>
@@ -73,7 +86,10 @@ export default function UserProfile() {
 								Nombre
 							</th>
 							<th scope="col" className="px-6 py-3">
-								Clase
+								Main Class
+							</th>
+							<th scope="col" className="px-6 py-3">
+								Second Class
 							</th>
 							<th scope="col" className="px-6 py-3">
 								Stats
@@ -94,10 +110,27 @@ export default function UserProfile() {
 											<div
 												className="  bg-blue-600 h-2.5 rounded-full text-xs font-medium text-black text-center align-text-top leading-none"
 												style={{
-													width: calcularExpProgress(x),
+													width: calcularExpProgress(x, true),
 												}}
 											></div>
 										</div>
+									</td>
+									<td>
+										{x.defaultSecondClassId === "" ? (
+											<div>
+												{x.defaultSecondClassId}
+												<div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+													<div
+														className="  bg-blue-600 h-2.5 rounded-full text-xs font-medium text-black text-center align-text-top leading-none"
+														style={{
+															width: calcularExpProgress(x, false),
+														}}
+													></div>
+												</div>
+											</div>
+										) : (
+											<div></div>
+										)}
 									</td>
 									<td>
 										{x.defaultStats.map((y) => {
