@@ -66,13 +66,14 @@ export default function UnitAddComponent(props: { onUpdate: () => void; initialC
 							<div className=" mb-2  absolute bottom-0 right-0">
 								<Button
 									onClick={() => {
-										let res = addNewUnit(unitName, props.initialClasses[classIndex]._id);
-										if (!res) {
-											alert("error");
-										} else {
-											setOpenModal(false);
-											props.onUpdate();
-										}
+										addNewUnit(unitName, props.initialClasses[classIndex]._id).then((res) => {
+											if (res.status) {
+												setOpenModal(false);
+												props.onUpdate();
+											} else {
+												alert(res.reason);
+											}
+										});
 									}}
 								>
 									Guardar

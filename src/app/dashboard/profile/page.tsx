@@ -102,7 +102,7 @@ export default function UserProfile() {
 									<td>
 										{x.defaultStats.map((y) => {
 											return (
-												<div id={x._id} className=" inline-flex">
+												<div key={y.statsName} className=" inline-flex">
 													<span className=" text-red-400 ">{y.statsName}</span>
 													<span> : </span>
 													<span className=" me-1.5">{y.amount}</span>

@@ -46,7 +46,7 @@ export async function MovePlayer(unit_uuid: string, game_uuid: string, x: number
 }
 
 export async function addNewUnit(name: string, class_id: string) {
-	let result = false;
+	let result: { status: boolean; reason: string } = { status: false, reason: "" };
 	const response = fetch("http://localhost:8081/user/unit", {
 		method: "POST",
 		headers: {
@@ -58,12 +58,12 @@ export async function addNewUnit(name: string, class_id: string) {
 
 	await response.then(async (x) => {
 		if (x.status === 201) {
-			result = true;
-			/*await x.json().then((res) => {
-				if (res.status === "OK") {
-					
-				}
-			});*/
+			result.status = true;
+		} else {
+			if (x.status === 400) {
+				result.status = false;
+				result.reason = (await x.json()).message;
+			}
 		}
 	});
 	return result;
