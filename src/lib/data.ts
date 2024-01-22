@@ -1,5 +1,5 @@
 import router from "next/router";
-import { Game, GameUnit, LoginData, MoveAction, Unit } from "./interfaces";
+import { Game, GameUnit, LoginData, MoveAction, Unit, User } from "./interfaces";
 
 export async function Login(loginData: LoginData): Promise<{ access_token: string; user_uuid: string }> {
 	const response = await fetch("http://localhost:8081/login", {
@@ -82,6 +82,26 @@ export async function getAllUnits() {
 	await response.then(async (res) => {
 		if (res.ok) {
 			await res.json().then((x: Unit[]) => {
+				result = x;
+			});
+		}
+	});
+	return result;
+}
+
+export async function getUserData() {
+	let result: User | undefined;
+	const response = fetch("http://localhost:8081/user/unit", {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+			authorization: sessionStorage.getItem("jwt") || "",
+		},
+	});
+
+	await response.then(async (res) => {
+		if (res.ok) {
+			await res.json().then((x: User) => {
 				result = x;
 			});
 		}

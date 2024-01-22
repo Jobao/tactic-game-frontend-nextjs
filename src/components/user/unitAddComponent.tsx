@@ -4,14 +4,14 @@ import { UnitClass } from "@/lib/interfaces";
 import { Button, Modal, Label, TextInput } from "flowbite-react";
 import { useState, useEffect } from "react";
 
-export default function UnitAddComponent() {
+export default function UnitAddComponent(props: { onUpdate: () => void; initialClasses: UnitClass[] }) {
 	const [openModal, setOpenModal] = useState(false);
 	const [classes, setClasses] = useState<UnitClass[]>([]);
 	const [classIndex, setClassIndex] = useState(0);
 	const [unitName, setUnitName] = useState("");
 
 	useEffect(() => {
-		const response = fetch("http://localhost:8081/unit-clases/initial", {
+		/*const response = fetch("http://localhost:8081/unit-clases/initial", {
 			method: "GET",
 		});
 
@@ -21,7 +21,7 @@ export default function UnitAddComponent() {
 					setClasses(x);
 				});
 			}
-		});
+		});*/
 	}, []);
 
 	return (
@@ -54,7 +54,7 @@ export default function UnitAddComponent() {
 										setClassIndex(e.target.selectedIndex);
 									}}
 								>
-									{classes.map((x) => {
+									{props.initialClasses.map((x) => {
 										return (
 											<option key={x._id} value={x._id}>
 												{x._id}
@@ -66,11 +66,12 @@ export default function UnitAddComponent() {
 							<div className=" mb-2  absolute bottom-0 right-0">
 								<Button
 									onClick={() => {
-										let res = addNewUnit(unitName, classes[classIndex]._id);
+										let res = addNewUnit(unitName, props.initialClasses[classIndex]._id);
 										if (!res) {
 											alert("error");
 										} else {
 											setOpenModal(false);
+											props.onUpdate();
 										}
 									}}
 								>
@@ -79,7 +80,7 @@ export default function UnitAddComponent() {
 							</div>
 						</div>
 						<div>
-							{classes[classIndex]?.baseAttributes.map((x) => {
+							{props.initialClasses[classIndex]?.baseAttributes.map((x) => {
 								return (
 									<p key={x.attributeName} className=" mx-2">
 										{x.attributeName + " : " + x.amount.toString()}

@@ -32,12 +32,12 @@ export interface GameUnit {
 
 	canAttack: boolean;
 
-	stats: [
-		{
-			statsName: string;
-			amount: number;
-		}
-	];
+	stats: TupleStats[];
+	equipment: any;
+
+	mainClassExperience: TupleClassExperience;
+
+	secondClassExperience: TupleClassExperience;
 
 	//equipment:UnitEquiped
 }
@@ -112,17 +112,39 @@ export interface Unit {
 
 	name: string;
 
-	currentClassId: string;
+	defaultMainClassId: string;
 
-	battleActions: string;
+	defaultSecondClassId: string;
 
-	classExperience: TupleRequiredClass[];
+	defaultEquipment: any; //cambiar despues
 
-	stats: TupleStats[];
+	classExperience: TupleClassExperience[];
+
+	defaultStats: TupleStats[];
+}
+
+export interface TupleClassExperience {
+	_id: string;
+	currentExperience: number;
+	currentClassLevel: number;
+
+	currentPoints: number;
+
+	habilidadesDesbloquedas: [];
 }
 
 export interface TupleStats {
 	statsName: StatsName;
 
 	amount: number;
+}
+
+export interface User {
+	user: string;
+
+	displayName: string;
+
+	createdUnits: Unit[];
+
+	gameJoinedList: string[];
 }
