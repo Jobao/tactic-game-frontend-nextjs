@@ -36,17 +36,6 @@ export default function UserProfile() {
 	function handleAdd() {
 		setNunit(!nUnit);
 	}
-
-	function createStatsDisplay(t: TupleStats[]) {
-		let p: React.JSX.Element;
-
-		let result = "";
-		t.forEach((element) => {
-			result += "<span>" + element.statsName + " : " + element.amount.toString() + " </span>";
-		});
-
-		return result;
-	}
 	function calcularExpProgress(x: Unit, main: boolean) {
 		let aux: number | undefined = 0;
 		let tuple = x.classExperience.find((e) => {

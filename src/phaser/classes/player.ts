@@ -3,6 +3,7 @@ import { Scene } from "phaser";
 import MainScene from "../scenes/mainscene";
 import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components";
 import { STORE, setGameState, setSelectedUnit, setUnitData } from "@/lib/redux/store";
+import { AttackPlayer } from "@/lib/data";
 
 export default class Player extends Phaser.GameObjects.Sprite {
 	constructor(scene: MainScene, x: number, y: number, key: string, frame: string | number | undefined, _unit_data: GameUnit) {
@@ -38,6 +39,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
 				}
 
 				if (cacheStore.gameState === "WAIT_FOR_ATTACK") {
+					AttackPlayer(cacheStore.unitData.unitBase_uuid, this.mainScene.data_game._id, x / 32, y / 32);
+					STORE.dispatch(setGameState("IDLE"));
 				}
 			},
 			this

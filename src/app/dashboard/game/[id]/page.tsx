@@ -26,12 +26,18 @@ export default function GameDetails() {
 						"Content-Type": "application/json",
 						authorization: sessionStorage.getItem("jwt") || "",
 					},
-				}).then((x) => {
+				}).then(async (x) => {
 					if (x.status === 200) {
-						x.json().then((y) => {
+						await x.json().then((y: Game) => {
+							y.placedUnitList.forEach((z) => {
+								z.gameUnit.forEach((u) => {
+									u.owner_uuid = z.user_uuid;
+								});
+							});
 							setActGame(y);
-							if(actGame)
+							if (actGame) {
 								actGame.game_uuid = params.id.toString();
+							}
 						});
 					} else {
 						if (x.status === 401) {

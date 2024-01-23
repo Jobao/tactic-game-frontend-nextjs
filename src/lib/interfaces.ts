@@ -39,6 +39,8 @@ export interface GameUnit {
 
 	secondClassExperience: TupleClassExperience;
 
+	owner_uuid: string;
+
 	//equipment:UnitEquiped
 }
 

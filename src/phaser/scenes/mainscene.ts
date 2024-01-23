@@ -8,7 +8,7 @@ import Rectangle from "phaser3-rex-plugins/plugins/utils/geom/rectangle/Rectangl
 import { Vector2 } from "phaser3-rex-plugins/plugins/utils/geom/types";
 import { setSelectedUnit, gameStore, STORE, setUnitData, setGameState, setUnitPosition } from "@/lib/redux/store";
 import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { MovePlayer } from "@/lib/data";
+import { AttackPlayer, MovePlayer } from "@/lib/data";
 
 export default class MainScene extends Scene {
 	constructor(config: string | Phaser.Types.Scenes.SettingsConfig) {
@@ -125,7 +125,7 @@ export default class MainScene extends Scene {
 				(pointer: Phaser.Input.Pointer, currently: any) => {
 					switch (STORE.getState().gameDataStore.gameState) {
 						case "WAIT_FOR_MOVE":
-							const worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
+							var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
 							var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
 							if (this.terrainLayer && c) {
 								MovePlayer(STORE.getState().gameDataStore.unitData.unitBase_uuid, this.data_game?._id, c.x, c.y).then((x) => {
@@ -157,6 +157,27 @@ export default class MainScene extends Scene {
 							}
 							break;
 						case "WAIT_FOR_ATTACK":
+							/*var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
+							var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
+							if (this.terrainLayer && c) {
+								AttackPlayer(STORE.getState().gameDataStore.unitData.unitBase_uuid, this.data_game?._id, c.x, c.y).then((x) => {
+									if (x) {
+										if (c) {
+											this.terrainLayer
+												?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY)
+												.setAlpha(1);
+											this.selectedUnit?.setPosition(c?.x * 32, c?.y * 32);
+											STORE.dispatch(setUnitPosition({ x: c?.x, y: c?.y }));
+											this.terrainLayer
+												?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY)
+												.setAlpha(0.5);
+										}
+										this.selectedUnit?.updateUnitData();
+									}
+								});
+							}
+
+							STORE.dispatch(setGameState("IDLE"));*/
 							break;
 
 						default:

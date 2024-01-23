@@ -1,6 +1,7 @@
 import Player from "@/phaser/classes/player";
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
 import { GameUnit } from "@/lib/interfaces";
+import { StatsName } from "../../../../tactic-game-backend-nestjs/src/game/schemas/enums";
 const posiblesStates = ["NONE", "IDLE", "WAIT_FOR_MOVE", "WAIT_FOR_ATTACK"];
 const GameDataInitial: GameUnit = {
 	unitBase_uuid: "",
@@ -11,7 +12,23 @@ const GameDataInitial: GameUnit = {
 	canPerformActionThisTurn: false,
 	canMove: false,
 	canAttack: false,
-	stats: [{ statsName: "", amount: 0 }],
+	stats: [{ statsName: StatsName.HP, amount: 0 }],
+	equipment: undefined,
+	mainClassExperience: {
+		_id: "",
+		currentExperience: 0,
+		currentClassLevel: 0,
+		currentPoints: 0,
+		habilidadesDesbloquedas: [],
+	},
+	secondClassExperience: {
+		_id: "",
+		currentExperience: 0,
+		currentClassLevel: 0,
+		currentPoints: 0,
+		habilidadesDesbloquedas: [],
+	},
+	owner_uuid: "",
 };
 
 export const gameStore = createSlice({
@@ -52,10 +69,15 @@ export const gameStore = createSlice({
 			state.gameDataStore.unitData.posX = nPos.payload.x;
 			state.gameDataStore.unitData.posY = nPos.payload.y;
 		},
+
+		resetData: (state) => {
+			(state.gameDataStore.gameState = "NONE"), (state.gameDataStore.unitData = GameDataInitial);
+			state.gameDataStore.selectedUnit = false;
+		},
 	},
 });
 
-export const { setSelectedUnit, setGameState, setUnitData, setUnitPosition } = gameStore.actions;
+export const { setSelectedUnit, setGameState, setUnitData, setUnitPosition, resetData } = gameStore.actions;
 
 export type IGameStoreState = ReturnType<typeof gameStore.reducer>;
 

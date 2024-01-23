@@ -45,6 +45,38 @@ export async function MovePlayer(unit_uuid: string, game_uuid: string, x: number
 	return result;
 }
 
+export async function AttackPlayer(unit_uuid: string, game_uuid: string, x: number, y: number) {
+	let result = false;
+	let response = fetch("http://localhost:8081/game/" + game_uuid + "/action", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			authorization: sessionStorage.getItem("jwt") || "",
+		},
+		body: JSON.stringify({
+			unit_uuid: unit_uuid,
+			action: {
+				type: "ATTACK",
+				target: {
+					x: x,
+					y: y,
+				},
+			},
+		}),
+	});
+	await response.then(async (x) => {
+		if (x.status === 201) {
+			await x.json().then((res) => {
+				if (res.status === "OK") {
+					result = true;
+				}
+			});
+		}
+	});
+
+	return result;
+}
+
 export async function addNewUnit(name: string, class_id: string) {
 	let result: { status: boolean; reason: string } = { status: false, reason: "" };
 	const response = fetch("http://localhost:8081/user/unit", {

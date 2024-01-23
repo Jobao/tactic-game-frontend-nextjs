@@ -10,14 +10,17 @@ import BoardPlugin from "phaser3-rex-plugins/plugins/board-plugin";
 import { Button } from "flowbite-react";
 import { setSelectedUnit, gameStore, STORE, IGameStoreState, setGameState } from "@/lib/redux/store";
 import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import useGetSession from "../customHooks/useGetSession";
 
 export default function PhaserGame(props: { gameData: GameData }) {
 	const [isReady, setReady] = useState(false);
 	const [game, setGame] = useState<Game | null>(null);
 	const parentEl = useRef<HTMLDivElement>(null);
 	const [sceneM, setSceneM] = useState<MainScene>();
-	const x = useSelector((state: IGameStoreState) => state.gameDataStore);
+	var isSelectedUnitStore = useSelector((state: IGameStoreState) => state.gameDataStore.selectedUnit);
+	var gameStateStore = useSelector((state: IGameStoreState) => state.gameDataStore.gameState);
+	var unitDataStore = useSelector((state: IGameStoreState) => state.gameDataStore.unitData);
 
 	useEffect(() => {
 		if (game) {
@@ -75,22 +78,51 @@ export default function PhaserGame(props: { gameData: GameData }) {
 		}
 	}, [game]);
 
+	function isMine() {
+		var z = sessionStorage.getItem("user_uuid");
+		if (z) {
+			return z === unitDataStore.owner_uuid;
+
+			//No se porque no se actualiza el valor de unitDataStore
+		}
+		return false;
+	}
+
 	return (
 		<div className=" relative inline">
 			<div ref={parentEl} className=""></div>
 			<div id="UI" className=" absolute top-0 border-2 flex" style={{ width: 800, height: 600, marginLeft: 801 }}>
 				<div className=" text-black border-2 w-1/3">
 					<div id="container-text">
-						<p>Game Status: {STORE.getState().gameDataStore.gameState}</p>
+						<p>Game Status: {gameStateStore}</p>
 						<hr />
+						{isSelectedUnitStore ? (
+							<div>
+								<p>
+									HP : {unitDataStore.currentHP <= 0 ? "0" : unitDataStore.currentHP} / {unitDataStore.stats[0].amount}
+								</p>
+								<p>
+									MP : {unitDataStore.currentMP <= 0 ? "0" : unitDataStore.currentMP} / {unitDataStore.stats[1].amount}
+								</p>
+							</div>
+						) : (
+							<div></div>
+						)}
 					</div>
 				</div>
-
 				<div>
 					<Button
-						{...{ disabled: !x }}
+						{...{
+							disabled: !(
+								isMine() &&
+								isSelectedUnitStore &&
+								unitDataStore.currentHP > 0 &&
+								unitDataStore.canMove &&
+								unitDataStore.canPerformActionThisTurn
+							),
+						}}
 						onClick={() => {
-							if (STORE.getState().gameDataStore.selectedUnit) {
+							if (isSelectedUnitStore) {
 								STORE.dispatch(setGameState("WAIT_FOR_MOVE"));
 							}
 						}}
@@ -99,9 +131,17 @@ export default function PhaserGame(props: { gameData: GameData }) {
 					</Button>
 
 					<Button
-						{...{ disabled: !x.selectedUnit }}
+						{...{
+							disabled: !(
+								isMine() &&
+								isSelectedUnitStore &&
+								unitDataStore.currentHP > 0 &&
+								unitDataStore.canMove &&
+								unitDataStore.canPerformActionThisTurn
+							),
+						}}
 						onClick={() => {
-							if (STORE.getState().gameDataStore.selectedUnit) {
+							if (isSelectedUnitStore) {
 								STORE.dispatch(setGameState("WAIT_FOR_ATTACK"));
 							}
 						}}
