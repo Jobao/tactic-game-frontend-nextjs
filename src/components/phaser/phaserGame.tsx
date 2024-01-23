@@ -19,8 +19,10 @@ export default function PhaserGame(props: { gameData: GameData }) {
 	const parentEl = useRef<HTMLDivElement>(null);
 	const [sceneM, setSceneM] = useState<MainScene>();
 	var isSelectedUnitStore = useSelector((state: IGameStoreState) => state.gameDataStore.selectedUnit);
+	var isSelectedTargetUnitStore = useSelector((state: IGameStoreState) => state.gameDataStore.selectedTargetUnit);
 	var gameStateStore = useSelector((state: IGameStoreState) => state.gameDataStore.gameState);
-	var unitDataStore = useSelector((state: IGameStoreState) => state.gameDataStore.unitData);
+	var unitDataStore = useSelector((state: IGameStoreState) => state.gameDataStore.selectedUnitData);
+	var targetUnitDataStore = useSelector((state: IGameStoreState) => state.gameDataStore.selectedTargetUnitData);
 
 	useEffect(() => {
 		if (game) {
@@ -98,6 +100,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 						<hr />
 						{isSelectedUnitStore ? (
 							<div>
+								<p className=" text-center">SELECTED UNIT</p>
 								<p>
 									HP : {unitDataStore.currentHP <= 0 ? "0" : unitDataStore.currentHP} / {unitDataStore.stats[0].amount}
 								</p>
@@ -108,9 +111,23 @@ export default function PhaserGame(props: { gameData: GameData }) {
 						) : (
 							<div></div>
 						)}
+						<hr />
+						{isSelectedTargetUnitStore ? (
+							<div>
+								<p className=" text-center">SELECTED TARGET UNIT</p>
+								<p>
+									HP : {targetUnitDataStore.currentHP <= 0 ? "0" : targetUnitDataStore.currentHP} / {targetUnitDataStore.stats[0].amount}
+								</p>
+								<p>
+									MP : {targetUnitDataStore.currentMP <= 0 ? "0" : targetUnitDataStore.currentMP} / {targetUnitDataStore.stats[1].amount}
+								</p>
+							</div>
+						) : (
+							<div></div>
+						)}
 					</div>
 				</div>
-				<div>
+				<div className=" space-y-1">
 					<Button
 						{...{
 							disabled: !(
@@ -147,6 +164,25 @@ export default function PhaserGame(props: { gameData: GameData }) {
 						}}
 					>
 						Atacar
+					</Button>
+
+					<Button
+						{...{
+							disabled: !(
+								isMine() &&
+								isSelectedUnitStore &&
+								unitDataStore.currentHP > 0 &&
+								unitDataStore.canMove &&
+								unitDataStore.canPerformActionThisTurn
+							),
+						}}
+						onClick={() => {
+							if (isSelectedUnitStore) {
+								STORE.dispatch(setGameState("WAIT_FOR_ATTACK"));
+							}
+						}}
+					>
+						Confirmar
 					</Button>
 				</div>
 			</div>

@@ -2,7 +2,7 @@ import { GameUnit } from "@/lib/interfaces";
 import { Scene } from "phaser";
 import MainScene from "../scenes/mainscene";
 import { Menu } from "phaser3-rex-plugins/templates/ui/ui-components";
-import { STORE, setGameState, setSelectedUnit, setUnitData } from "@/lib/redux/store";
+import { STORE, setGameState, setSelectedTargetUnit, setSelectedUnit, setUnitData, setTargetUnitData } from "@/lib/redux/store";
 import { AttackPlayer } from "@/lib/data";
 
 export default class Player extends Phaser.GameObjects.Sprite {
@@ -24,9 +24,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
 				if (cacheStore.gameState === "NONE" || cacheStore.gameState === "IDLE") {
 					var tile = scene.terrainLayer?.getTileAt(this.unit_data.posX, this.unit_data.posY);
 
-					if (cacheStore.unitData.unitBase_uuid !== "") {
-						if (cacheStore.unitData.unitBase_uuid !== this.unit_data.unitBase_uuid) {
-							var oldTile = scene.terrainLayer?.getTileAt(cacheStore.unitData.posX, cacheStore.unitData.posY);
+					if (cacheStore.selectedUnitData.unitBase_uuid !== "") {
+						if (cacheStore.selectedUnitData.unitBase_uuid !== this.unit_data.unitBase_uuid) {
+							var oldTile = scene.terrainLayer?.getTileAt(cacheStore.selectedUnitData.posX, cacheStore.selectedUnitData.posY);
 							//console.log(terrainLayer?.getTileAt(x, y));
 							oldTile?.setAlpha(1);
 						}
@@ -39,8 +39,13 @@ export default class Player extends Phaser.GameObjects.Sprite {
 				}
 
 				if (cacheStore.gameState === "WAIT_FOR_ATTACK") {
-					AttackPlayer(cacheStore.unitData.unitBase_uuid, this.mainScene.data_game._id, x / 32, y / 32);
-					STORE.dispatch(setGameState("IDLE"));
+					if (cacheStore.selectedUnitData.unitBase_uuid !== this.unit_data.unitBase_uuid) {
+						STORE.dispatch(setSelectedTargetUnit(true));
+						STORE.dispatch(setTargetUnitData(this.unit_data));
+					}
+
+					//AttackPlayer(cacheStore.selectedUnitData.unitBase_uuid, this.mainScene.data_game._id, x / 32, y / 32);
+					//STORE.dispatch(setGameState("IDLE"));
 				}
 			},
 			this
@@ -177,6 +182,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
 	}
 
 	updateUnitData() {
-		this.unit_data = STORE.getState().gameDataStore.unitData;
+		this.unit_data = STORE.getState().gameDataStore.selectedUnitData;
 	}
 }

@@ -2,6 +2,7 @@ import Player from "@/phaser/classes/player";
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
 import { GameUnit } from "@/lib/interfaces";
 import { StatsName } from "../../../../tactic-game-backend-nestjs/src/game/schemas/enums";
+import { stat } from "fs";
 const posiblesStates = ["NONE", "IDLE", "WAIT_FOR_MOVE", "WAIT_FOR_ATTACK"];
 const GameDataInitial: GameUnit = {
 	unitBase_uuid: "",
@@ -37,13 +38,18 @@ export const gameStore = createSlice({
 	initialState: {
 		gameDataStore: {
 			selectedUnit: false,
+			selectedTargetUnit: false,
 			gameState: "NONE",
-			unitData: GameDataInitial,
+			selectedUnitData: GameDataInitial,
+			selectedTargetUnitData: GameDataInitial,
 		},
 	},
 	reducers: {
 		setSelectedUnit: (state, selected: PayloadAction<boolean>) => {
 			state.gameDataStore.selectedUnit = selected.payload;
+		},
+		setSelectedTargetUnit: (state, selected: PayloadAction<boolean>) => {
+			state.gameDataStore.selectedTargetUnit = selected.payload;
 		},
 		setGameState: (state, nState: PayloadAction<string>) => {
 			if (
@@ -59,25 +65,35 @@ export const gameStore = createSlice({
 
 		setUnitData: (state, unit: PayloadAction<GameUnit | undefined>) => {
 			if (unit.payload) {
-				state.gameDataStore.unitData = unit.payload;
+				state.gameDataStore.selectedUnitData = unit.payload;
 			} else {
-				state.gameDataStore.unitData = GameDataInitial;
+				state.gameDataStore.selectedUnitData = GameDataInitial;
+			}
+		},
+
+		setTargetUnitData: (state, unit: PayloadAction<GameUnit | undefined>) => {
+			if (unit.payload) {
+				state.gameDataStore.selectedTargetUnitData = unit.payload;
+			} else {
+				state.gameDataStore.selectedTargetUnitData = GameDataInitial;
 			}
 		},
 
 		setUnitPosition: (state, nPos: PayloadAction<{ x: number; y: number }>) => {
-			state.gameDataStore.unitData.posX = nPos.payload.x;
-			state.gameDataStore.unitData.posY = nPos.payload.y;
+			state.gameDataStore.selectedUnitData.posX = nPos.payload.x;
+			state.gameDataStore.selectedUnitData.posY = nPos.payload.y;
 		},
 
 		resetData: (state) => {
-			(state.gameDataStore.gameState = "NONE"), (state.gameDataStore.unitData = GameDataInitial);
+			(state.gameDataStore.gameState = "NONE"), (state.gameDataStore.selectedUnitData = GameDataInitial);
 			state.gameDataStore.selectedUnit = false;
+			state.gameDataStore.selectedTargetUnitData = GameDataInitial;
+			state.gameDataStore.selectedTargetUnit = false;
 		},
 	},
 });
 
-export const { setSelectedUnit, setGameState, setUnitData, setUnitPosition, resetData } = gameStore.actions;
+export const { setSelectedUnit, setGameState, setUnitData, setUnitPosition, resetData, setSelectedTargetUnit, setTargetUnitData } = gameStore.actions;
 
 export type IGameStoreState = ReturnType<typeof gameStore.reducer>;
 

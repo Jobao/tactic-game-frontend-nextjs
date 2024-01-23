@@ -128,16 +128,16 @@ export default class MainScene extends Scene {
 							var worldPoint = this.input.activePointer.positionToCamera(this.cameras.main) as Vector2;
 							var c = this.terrainLayer?.getTileAtWorldXY(worldPoint.x, worldPoint.y);
 							if (this.terrainLayer && c) {
-								MovePlayer(STORE.getState().gameDataStore.unitData.unitBase_uuid, this.data_game?._id, c.x, c.y).then((x) => {
+								MovePlayer(STORE.getState().gameDataStore.selectedUnitData.unitBase_uuid, this.data_game?._id, c.x, c.y).then((x) => {
 									if (x) {
 										if (c) {
 											this.terrainLayer
-												?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY)
+												?.getTileAt(STORE.getState().gameDataStore.selectedUnitData.posX, STORE.getState().gameDataStore.selectedUnitData.posY)
 												.setAlpha(1);
 											this.selectedUnit?.setPosition(c?.x * 32, c?.y * 32);
 											STORE.dispatch(setUnitPosition({ x: c?.x, y: c?.y }));
 											this.terrainLayer
-												?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY)
+												?.getTileAt(STORE.getState().gameDataStore.selectedUnitData.posX, STORE.getState().gameDataStore.selectedUnitData.posY)
 												.setAlpha(0.5);
 										}
 										this.selectedUnit?.updateUnitData();
@@ -148,8 +148,10 @@ export default class MainScene extends Scene {
 							STORE.dispatch(setGameState("IDLE"));
 							break;
 						case "IDLE":
-							if (STORE.getState().gameDataStore.unitData) {
-								this.terrainLayer?.getTileAt(STORE.getState().gameDataStore.unitData.posX, STORE.getState().gameDataStore.unitData.posY).setAlpha(1);
+							if (STORE.getState().gameDataStore.selectedUnitData) {
+								this.terrainLayer
+									?.getTileAt(STORE.getState().gameDataStore.selectedUnitData.posX, STORE.getState().gameDataStore.selectedUnitData.posY)
+									.setAlpha(1);
 								this.selectedUnit = undefined;
 								STORE.dispatch(setGameState("NONE"));
 								STORE.dispatch(setUnitData(undefined));
