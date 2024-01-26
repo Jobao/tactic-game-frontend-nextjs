@@ -192,14 +192,17 @@ export default class MainScene extends Scene {
 
 		if (true) {
 			if (this.data_game) {
-				for (let index = 0; index < this.data_game.placedUnitList.length; index++) {
-					const element = this.data_game.placedUnitList[index];
+				this.data_game.unitList.forEach((element) => {
+					const aux = element;
+					var p = new Player(this, aux.posX * 32, aux.posY * 32, "playerTileset", 0, aux);
+					this.input.enableDebug(p);
+				}); /*
+				for (let index = 0; index < this.data_game.unitList.length; index++) {
+					const element = this.data_game.unitList[index];
 					for (let unit = 0; unit < element.gameUnit.length; unit++) {
-						const aux = element.gameUnit[unit];
-						var p = new Player(this, aux.posX * 32, aux.posY * 32, "playerTileset", 0, aux);
-						this.input.enableDebug(p);
+						
 					}
-				}
+				}*/
 			}
 		}
 	}

@@ -83,7 +83,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 	function isMine() {
 		var z = sessionStorage.getItem("user_uuid");
 		if (z) {
-			return z === unitDataStore.owner_uuid;
+			return z === unitDataStore.user_uuid;
 
 			//No se porque no se actualiza el valor de unitDataStore
 		}

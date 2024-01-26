@@ -1,4 +1,11 @@
-import { AttributesName, StatsName } from "../../../tactic-game-backend-nestjs/src/game/schemas/enums";
+import {
+	AttributesName,
+	EquipmentSlot,
+	StatsName,
+	TypeAffect,
+	TypeEffect,
+	WeaponType,
+} from "../../../tactic-game-backend-nestjs/src/game/schemas/enums";
 
 export interface LoginData {
 	user: string;
@@ -16,6 +23,8 @@ export interface NewGame {
 }
 
 export interface GameUnit {
+	user_uuid: string;
+
 	unitBase_uuid: string;
 
 	posX: number;
@@ -33,15 +42,53 @@ export interface GameUnit {
 	canAttack: boolean;
 
 	stats: TupleStats[];
-	equipment: any;
+
+	equipment: EquipmentOBJDto;
 
 	mainClassExperience: TupleClassExperience;
 
 	secondClassExperience: TupleClassExperience;
+}
+export interface EquipmentOBJDto {
+	head?: EquipableItem;
+	chest?: EquipableItem;
+	gloves?: EquipableItem;
+	feet?: EquipableItem;
+	mainHand?: WeaponItem;
+	secondHand?: WeaponItem;
+	amulet?: EquipableItem;
+}
 
-	owner_uuid: string;
+export interface Item {
+	_id: string;
 
-	//equipment:UnitEquiped
+	description: string;
+
+	name: string;
+
+	/*@Prop({enum:[]})
+    itemType:string*/
+}
+
+export interface EquipableItem extends Item {
+	slot: EquipmentSlot;
+
+	effects: [Effect];
+
+	stats: [TupleStats];
+}
+
+export interface WeaponItem extends EquipableItem {
+	range: number;
+
+	weaponType: WeaponType;
+}
+
+export interface Effect {
+	stats: TupleStats;
+	typeEffect: TypeEffect;
+	turn: number;
+	unitAffect: TypeAffect;
 }
 
 export interface PlacedUnit {
@@ -55,7 +102,7 @@ export interface GameOrder {}
 export interface Game extends NewGame {
 	_id: string;
 
-	placedUnitList: PlacedUnit[];
+	unitList: GameUnit[];
 
 	isEnd: boolean;
 

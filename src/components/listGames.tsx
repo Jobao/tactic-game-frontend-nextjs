@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Game } from "@/lib/interfaces";
 import PlayGameButton from "./playGameButton";
 import React from "react";
 import { useRouter } from "next/navigation";
 
 export default function ListGames() {
-	const [games, setGames] = useState<[Game]>();
 	const [loading, setloading] = useState<boolean>();
+	const [gameHeaders, setGameHeaders] = useState<[{ game_uuid: string; isEnd: boolean; isStart: boolean }]>();
 	const router = useRouter();
 
 	useEffect(() => {
@@ -22,8 +21,8 @@ export default function ListGames() {
 
 		response.then((res) => {
 			if (res.status === 200) {
-				res.json().then((j) => {
-					setGames(j);
+				res.json().then((j: [{ game_uuid: string; isEnd: boolean; isStart: boolean }]) => {
+					setGameHeaders(j);
 					setloading(false);
 				});
 			}
@@ -49,18 +48,18 @@ export default function ListGames() {
 							</tr>
 						</thead>
 						<tbody>
-							{games?.map((x) => {
+							{gameHeaders?.map((game) => {
 								return (
 									<tr
-										key={x._id}
+										key={game.game_uuid}
 										className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700"
 									>
 										<th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-											{x._id}
+											{game.game_uuid}
 										</th>
-										<td className="px-6 py-4">{x.isEnd ? "SI" : "NO"}</td>
+										<td className="px-6 py-4">{game.isEnd ? "SI" : "NO"}</td>
 										<td className="flex items-center px-6 py-4">
-											<PlayGameButton {...{ game_uuid: x._id, router: router }}></PlayGameButton>
+											<PlayGameButton {...{ game_uuid: game.game_uuid, router: router }}></PlayGameButton>
 											<a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
 												Remove
 											</a>
@@ -73,5 +72,7 @@ export default function ListGames() {
 				</div>
 			</div>
 		);
+	} else {
+		return <div>LOADING</div>;
 	}
 }

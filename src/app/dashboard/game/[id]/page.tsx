@@ -29,11 +29,6 @@ export default function GameDetails() {
 				}).then(async (x) => {
 					if (x.status === 200) {
 						await x.json().then((y: Game) => {
-							y.placedUnitList.forEach((z) => {
-								z.gameUnit.forEach((u) => {
-									u.owner_uuid = z.user_uuid;
-								});
-							});
 							setActGame(y);
 							if (actGame) {
 								actGame.game_uuid = params.id.toString();

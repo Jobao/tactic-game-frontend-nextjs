@@ -29,7 +29,7 @@ const GameDataInitial: GameUnit = {
 		currentPoints: 0,
 		habilidadesDesbloquedas: [],
 	},
-	owner_uuid: "",
+	user_uuid: "",
 };
 
 export const gameStore = createSlice({
