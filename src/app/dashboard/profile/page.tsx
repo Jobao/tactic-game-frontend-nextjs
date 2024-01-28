@@ -84,6 +84,9 @@ export default function UserProfile() {
 								Stats
 							</th>
 							<th scope="col" className="px-6 py-3">
+								Equipamento
+							</th>
+							<th scope="col" className="px-6 py-3">
 								Acciones
 							</th>
 						</tr>
@@ -132,8 +135,9 @@ export default function UserProfile() {
 											);
 										})}
 									</td>
+									<td>Equipamento</td>
 									<td className=" inline-flex">
-										<ClassChangeComponent {...{ onUpdate: handleAdd }}></ClassChangeComponent>
+										<ClassChangeComponent {...{ onUpdate: handleAdd, unit: x }}></ClassChangeComponent>
 									</td>
 								</tr>
 							);
