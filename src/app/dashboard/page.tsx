@@ -8,6 +8,7 @@ export default function Dashboard() {
 
 			<hr />
 			<Link href={"/dashboard/profile"}>Profile</Link>
+			<Link href={"/dashboard/newgame"}>New Game</Link>
 		</>
 	);
 }
