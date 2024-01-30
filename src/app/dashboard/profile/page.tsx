@@ -33,6 +33,16 @@ export default function UserProfile() {
 		});
 	}, []);
 
+	useEffect(() => {
+		const response = fetch("http://localhost:8081/user/inventory", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				authorization: sessionStorage.getItem("jwt") || "",
+			},
+		});
+	}, []);
+
 	function handleAdd() {
 		setNunit(!nUnit);
 	}
