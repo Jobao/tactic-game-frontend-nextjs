@@ -13,6 +13,7 @@ export default function UserProfile() {
 	const [nUnit, setNunit] = useState(false);
 
 	const [allClases, setAllClases] = useState<UnitClass[]>([]);
+	const [inventory, setInventory] = useState<{ inventory: { amount: number; item: { img_url: string } }[] }>();
 	useEffect(() => {
 		getAllUnits().then((x) => {
 			setUnits(x);
@@ -40,6 +41,14 @@ export default function UserProfile() {
 				"Content-Type": "application/json",
 				authorization: sessionStorage.getItem("jwt") || "",
 			},
+		});
+
+		response.then((x) => {
+			if (x.ok) {
+				x.json().then((y) => {
+					setInventory(y);
+				});
+			}
 		});
 	}, []);
 
@@ -164,6 +173,13 @@ export default function UserProfile() {
 						}),
 					}}
 				></UnitAddComponent>
+			</div>
+			<div className=" grid grid-cols-8 grid-rows-6 ">
+				{inventory
+					? inventory.inventory.map((item, i) => {
+							return <img key={i} src={item.item.img_url} alt="" style={{ gap: 2 }} className=" h-8 w-8 border-solid" />;
+					  })
+					: "NO"}
 			</div>
 		</div>
 	);

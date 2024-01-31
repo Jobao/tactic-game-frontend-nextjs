@@ -1,11 +1,4 @@
-import {
-	AttributesName,
-	EquipmentSlot,
-	StatsName,
-	TypeAffect,
-	TypeEffect,
-	WeaponType,
-} from "../../../tactic-game-backend-nestjs/src/game/schemas/enums";
+import { AttributesName, EquipmentSlot, StatsName, TypeAffect, TypeEffect, WeaponType } from "../../../tactic-game-backend-nestjs/src/game/schemas/enums";
 
 export interface LoginData {
 	user: string;
@@ -197,3 +190,5 @@ export interface User {
 
 	gameJoinedList: string[];
 }
+
+export interface Item {}
