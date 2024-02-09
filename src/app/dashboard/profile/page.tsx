@@ -174,10 +174,16 @@ export default function UserProfile() {
 					}}
 				></UnitAddComponent>
 			</div>
-			<div className=" grid grid-cols-8 grid-rows-6 ">
+			<p>Inventario</p>
+			<div className=" grid grid-cols-8 grid-rows-6 h-1/3 w-6/12 gap-3">
 				{inventory
 					? inventory.inventory.map((item, i) => {
-							return <img key={i} src={item.item.img_url} alt="" style={{ gap: 2 }} className=" h-8 w-8 border-solid" />;
+							return (
+								<div className="relative shadow-md bg-yellow-50 border-4 divide-black">
+									<img key={i} src={item.item.img_url} alt="" style={{ gap: 2 }} className="  h-9 w-9 " />
+									<span className=" absolute bottom-0 right-0 ">{item.amount}</span>
+								</div>
+							);
 					  })
 					: "NO"}
 			</div>
