@@ -1,10 +1,12 @@
 import styles from "@/app/dashboard/styles.module.css";
-import ListGames from "@/components/listGames";
+import MyCurrentGames from "@/components/user/myCurrentGames";
+import ViewPublicGames from "@/components/user/viewPublicGames";
 import Link from "next/link";
 export default function Dashboard() {
 	return (
 		<>
-			<ListGames></ListGames>
+			<MyCurrentGames></MyCurrentGames>
+			<ViewPublicGames></ViewPublicGames>
 
 			<hr />
 			<Link href={"/dashboard/profile"}>Profile</Link>
@@ -12,3 +14,12 @@ export default function Dashboard() {
 		</>
 	);
 }
+/*
+<ListGames {...{ header: "Current Games", public: false }}></ListGames>
+			<hr />
+			<ListGames {...{ header: "Created Games", public: false }}></ListGames>
+			<hr />
+			<ListGames {...{ header: "Public Games", public: true }}></ListGames>
+
+
+*/

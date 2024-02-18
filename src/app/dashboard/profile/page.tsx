@@ -179,7 +179,7 @@ export default function UserProfile() {
 				{inventory
 					? inventory.inventory.map((item, i) => {
 							return (
-								<div className="relative shadow-md bg-yellow-50 border-4 divide-black">
+								<div key={i} className="relative shadow-md bg-yellow-50 border-4 divide-black">
 									<img key={i} src={item.item.img_url} alt="" style={{ gap: 2 }} className="  h-9 w-9 " />
 									<span className=" absolute bottom-0 right-0 ">{item.amount}</span>
 								</div>
