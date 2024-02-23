@@ -192,3 +192,9 @@ export interface User {
 }
 
 export interface Item {}
+
+export interface IGameHeaders {
+	game_uuid: string;
+	isEnd: boolean;
+	isStart: boolean;
+}

@@ -1,16 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import GameList from "../gameList";
+import { Unit, IGameHeaders } from "@/lib/interfaces";
+import { getAllUnits } from "@/lib/data";
+import StartedGameList from "./gameLists/startedGameList";
+import JoinedGameList from "./gameLists/joinedGameList";
 
-type IGameHeaders = {
-	game_uuid: string;
-	isEnd: boolean;
-	isStart: boolean;
-};
-export default function myCurrentGames() {
+export default function myCurrentGames(props: { onJoined: boolean }) {
 	const [myGameHeaders, setMyGameHeaders] = useState<IGameHeaders[]>([]);
 	const [joinedGameHeaders, setJoinedGameHeaders] = useState<IGameHeaders[]>([]);
 	const [loading, setloading] = useState<boolean>(true);
+
+	const [userUnitList, setUserUnitList] = useState<Unit[]>();
 
 	useEffect(() => {
 		const response = fetch("http://localhost:8081/game/allgamesbyuser", {
@@ -39,13 +39,14 @@ export default function myCurrentGames() {
 				});
 			}
 		});
-	}, []); //ACA ME QUEDE, ver de cargar una sola vez los datos del servidor, y llamar dos veces
-	//a GameList, una con los juegos iniciados, yotro con los juegos creados
+		getAllUnits().then((x) => {
+			setUserUnitList(x);
+		});
+	}, [props.onJoined]);
 	return (
 		<>
-			{myGameHeaders ? <GameList {...{ games: myGameHeaders, header: "Started Games", gameType: "started" }}></GameList> : "NADA"}
-			{joinedGameHeaders ? <GameList {...{ games: joinedGameHeaders, header: "Joined Games", gameType: "joined" }}></GameList> : "NADA"}
+			{myGameHeaders ? <StartedGameList {...{ games: myGameHeaders }}></StartedGameList> : "NADA"}
+			{joinedGameHeaders ? <JoinedGameList {...{ games: joinedGameHeaders }}></JoinedGameList> : "NADA"}
 		</>
 	);
-	return myGameHeaders ? <GameList {...{ games: myGameHeaders, header: "Started Games", gameType: "started" }}></GameList> : "NADA";
 }

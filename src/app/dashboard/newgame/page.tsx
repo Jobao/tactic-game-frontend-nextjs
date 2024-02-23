@@ -1,6 +1,7 @@
 "use client";
 import { Button, FloatingLabel, Label, RangeSlider, ToggleSwitch } from "flowbite-react";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 class createGameDto {
 	sizeX!: number;
 	sizeY!: number;
@@ -9,12 +10,14 @@ class createGameDto {
 	isPublic!: boolean;
 }
 export default function NewGame() {
-	const [sizeX, setSizeX] = useState(15);
-	const [sizeY, setSizeY] = useState(15);
+	const [sizeX, setSizeX] = useState(20);
+	const [sizeY, setSizeY] = useState(20);
 	const [minUnits, setMinUnits] = useState(1);
 	const [maxUnits, setMaxUnits] = useState(7);
 	const [isPublic, setIsPublic] = useState(false);
 	const [autoStart, setAutoStart] = useState(false);
+
+	const router = useRouter();
 	function handleClick() {
 		var c: createGameDto = new createGameDto();
 
@@ -31,6 +34,11 @@ export default function NewGame() {
 				authorization: sessionStorage.getItem("jwt") || "",
 			},
 		});
+		response.then((x) => {
+			if (x.ok) {
+				router.replace("/dashboard");
+			}
+		});
 	}
 
 	return (
@@ -38,8 +46,8 @@ export default function NewGame() {
 			<div>
 				<Label>Tamano X</Label>
 				<RangeSlider
-					min={10}
-					max={30}
+					min={20}
+					max={40}
 					value={sizeX}
 					onChange={(x) => {
 						setSizeX(Number.parseInt(x.target.value));
@@ -50,8 +58,8 @@ export default function NewGame() {
 			<div>
 				<Label>Tamano Y</Label>
 				<RangeSlider
-					min={10}
-					max={30}
+					min={20}
+					max={40}
 					value={sizeY}
 					onChange={(x) => {
 						setSizeY(Number.parseInt(x.target.value));

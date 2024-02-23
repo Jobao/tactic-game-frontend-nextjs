@@ -1,23 +1,18 @@
 "use client";
-import { useRouter } from "next/navigation";
 import React from "react";
 import PlayGameButton from "./playGameButton";
+import { Button } from "flowbite-react";
+import { useJoinGame } from "./customHooks/useJoinGame";
+import PlanningGameButton from "./user/planningGameButton";
+import { IGameHeaders } from "@/lib/interfaces";
 
-type GameHeaderType = {
-	game_uuid: string;
-	isEnd: boolean;
-	isStart: boolean;
-};
-
-export default function GameList(props: { games: GameHeaderType[]; header: string; gameType: string }) {
-	const router = useRouter();
-
-	function getButtons(gameHead: GameHeaderType) {
+export default function GameList(props: { games: IGameHeaders[]; header: string; gameType: string }) {
+	function getButtons(gameHead: IGameHeaders) {
 		switch (props.gameType) {
 			case "started":
 				return (
 					<td className="flex items-center px-6 py-4">
-						<PlayGameButton {...{ game_uuid: gameHead.game_uuid, router: router }}></PlayGameButton>
+						<PlayGameButton {...{ game_uuid: gameHead.game_uuid }}></PlayGameButton>
 						<a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">
 							Remove
 						</a>
@@ -25,14 +20,14 @@ export default function GameList(props: { games: GameHeaderType[]; header: strin
 				);
 
 			case "public":
-				return (
-					<td className="flex items-center px-6 py-4">
-						<JoinGameButton></JoinGameButton>
-					</td>
-				);
+				return <td className="flex items-center px-6 py-4"></td>;
 
 			case "joined":
-				return <div>Editar</div>;
+				return (
+					<td className="flex items-center px-6 py-4">
+						<PlanningGameButton></PlanningGameButton>
+					</td>
+				);
 		}
 	}
 	return (
@@ -74,8 +69,4 @@ export default function GameList(props: { games: GameHeaderType[]; header: strin
 			</div>
 		</div>
 	);
-}
-
-export function JoinGameButton() {
-	return <div>JOIN</div>;
 }

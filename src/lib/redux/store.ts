@@ -1,6 +1,6 @@
 import Player from "@/phaser/classes/player";
 import { createSlice, configureStore, PayloadAction } from "@reduxjs/toolkit";
-import { GameUnit } from "@/lib/interfaces";
+import { GameUnit, EquipmentOBJDto } from "@/lib/interfaces";
 import { StatsName } from "../../../../tactic-game-backend-nestjs/src/game/schemas/enums";
 import { stat } from "fs";
 const posiblesStates = ["NONE", "IDLE", "WAIT_FOR_MOVE", "WAIT_FOR_ATTACK"];
@@ -14,7 +14,8 @@ const GameDataInitial: GameUnit = {
 	canMove: false,
 	canAttack: false,
 	stats: [{ statsName: StatsName.HP, amount: 0 }],
-	equipment: undefined,
+	equipment: {},
+
 	mainClassExperience: {
 		_id: "",
 		currentExperience: 0,

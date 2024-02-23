@@ -15,6 +15,7 @@ export const gameContext = createContext<Game>({
 	sizeY: 0,
 	minUnits: 0,
 	maxUnits: 0,
+	game_uuid: "",
 });
 
 export function useGameContext() {

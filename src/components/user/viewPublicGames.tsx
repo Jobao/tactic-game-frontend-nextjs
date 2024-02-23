@@ -1,12 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import GameList from "../gameList";
+import PlayGameButton from "../playGameButton";
+import PublicGameList from "./gameLists/publicGameList";
 type IGameHeaders = {
 	game_uuid: string;
 	isEnd: boolean;
 	isStart: boolean;
 };
-export default function ViewPublicGames() {
+export default function ViewPublicGames(props: { handleJoin: () => void; update: boolean }) {
 	const [myGameHeaders, setMyGameHeaders] = useState<IGameHeaders[]>([]);
 	const [loading, setloading] = useState<boolean>(true);
 	useEffect(() => {
@@ -26,7 +28,7 @@ export default function ViewPublicGames() {
 				});
 			}
 		});
-	}, []);
+	}, [props.update]);
 
-	return <div>{myGameHeaders ? <GameList {...{ games: myGameHeaders, header: "Public Games", gameType: "public" }}></GameList> : "NADA"}</div>;
+	return <div>{myGameHeaders ? <PublicGameList {...{ games: myGameHeaders, handleJoin: props.handleJoin }}></PublicGameList> : "NADA"}</div>;
 }
