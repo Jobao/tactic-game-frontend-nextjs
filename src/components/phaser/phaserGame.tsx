@@ -3,15 +3,11 @@ import { useState, useRef, useEffect } from "react";
 import { Game as GameData } from "@/lib/interfaces";
 import MainScene from "@/phaser/scenes/mainscene";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import ScenePrueba from "@/phaser/scenes/scenePrueba";
 //import { Demo } from "@/phaser/scenes/panellll";
-import Demo from "@/phaser/scenes/pp.js";
 import BoardPlugin from "phaser3-rex-plugins/plugins/board-plugin";
 import { Button } from "flowbite-react";
-import { setSelectedUnit, gameStore, STORE, IGameStoreState, setGameState } from "@/lib/redux/store";
-import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import useGetSession from "../customHooks/useGetSession";
+import { STORE, IGameStoreState, setGameState } from "@/lib/redux/store";
+import { useSelector } from "react-redux";
 
 export default function PhaserGame(props: { gameData: GameData }) {
 	const [isReady, setReady] = useState(false);
@@ -130,13 +126,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 				<div className=" space-y-1">
 					<Button
 						{...{
-							disabled: !(
-								isMine() &&
-								isSelectedUnitStore &&
-								unitDataStore.currentHP > 0 &&
-								unitDataStore.canMove &&
-								unitDataStore.canPerformActionThisTurn
-							),
+							disabled: !(isMine() && isSelectedUnitStore && unitDataStore.currentHP > 0 && unitDataStore.canMove && unitDataStore.canPerformActionThisTurn),
 						}}
 						onClick={() => {
 							if (isSelectedUnitStore) {
@@ -149,13 +139,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 
 					<Button
 						{...{
-							disabled: !(
-								isMine() &&
-								isSelectedUnitStore &&
-								unitDataStore.currentHP > 0 &&
-								unitDataStore.canMove &&
-								unitDataStore.canPerformActionThisTurn
-							),
+							disabled: !(isMine() && isSelectedUnitStore && unitDataStore.currentHP > 0 && unitDataStore.canMove && unitDataStore.canPerformActionThisTurn),
 						}}
 						onClick={() => {
 							if (isSelectedUnitStore) {
@@ -168,13 +152,7 @@ export default function PhaserGame(props: { gameData: GameData }) {
 
 					<Button
 						{...{
-							disabled: !(
-								isMine() &&
-								isSelectedUnitStore &&
-								unitDataStore.currentHP > 0 &&
-								unitDataStore.canMove &&
-								unitDataStore.canPerformActionThisTurn
-							),
+							disabled: !(isMine() && isSelectedUnitStore && unitDataStore.currentHP > 0 && unitDataStore.canMove && unitDataStore.canPerformActionThisTurn),
 						}}
 						onClick={() => {
 							if (isSelectedUnitStore) {

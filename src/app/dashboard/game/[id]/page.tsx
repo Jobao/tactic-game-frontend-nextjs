@@ -1,6 +1,7 @@
 "use client";
 
-import { Game, GameUnit } from "@/lib/interfaces";
+import { getGameDetails } from "@/lib/data";
+import { CustomResponseType, Game, GameUnit } from "@/lib/interfaces";
 import { STORE } from "@/lib/redux/store";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
@@ -11,13 +12,23 @@ const PhaserGameComponentDynamic = dynamic(() => import("@/components/phaser/pha
 });
 
 export default function GameDetails() {
-	const params = useParams();
+	const params = useParams<{ id: string }>();
 	const [actGame, setActGame] = useState<Game>();
 	const [selectedUnit, setSelectedUnit] = useState<GameUnit | undefined>();
 	const [update, setUpdate] = useState(false);
 
 	useEffect(() => {
 		try {
+			getGameDetails(params.id).then((res: CustomResponseType<Game | undefined> | undefined) => {
+				console.log(res);
+
+				if (res?.status === "OK") {
+					setActGame(res.data);
+					if (actGame) {
+						actGame.game_uuid = params.id.toString();
+					}
+				}
+			}); /*
 			if (sessionStorage.getItem("jwt")) {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				const response = fetch("http://localhost:8081/game/" + params.id, {
@@ -41,7 +52,7 @@ export default function GameDetails() {
 						}
 					}
 				});
-			}
+			}*/
 		} catch (error) {
 			//console.log(error);
 		}
