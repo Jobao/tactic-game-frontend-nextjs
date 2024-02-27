@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import GameList from "../gameList";
 import PlayGameButton from "../playGameButton";
 import PublicGameList from "./gameLists/publicGameList";
 type IGameHeaders = {

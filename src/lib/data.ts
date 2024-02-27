@@ -1,5 +1,6 @@
 import router from "next/router";
-import { Game, GameUnit, LoginData, MoveAction, Unit, User } from "./interfaces";
+import { CustomResponseType, Game, GameUnit, LoginData, MoveAction, Unit, User } from "./interfaces";
+import axios, { Axios } from "axios";
 
 export async function Login(loginData: LoginData): Promise<{ access_token: string; user_uuid: string }> {
 	const response = await fetch("http://localhost:8081/login", {
@@ -102,7 +103,7 @@ export async function addNewUnit(name: string, class_id: string) {
 }
 
 export async function getAllUnits() {
-	let result: Unit[] = [];
+	let result: CustomResponseType<Unit[]> | undefined;
 	const response = fetch("http://localhost:8081/user/unit", {
 		method: "GET",
 		headers: {
@@ -113,7 +114,28 @@ export async function getAllUnits() {
 
 	await response.then(async (res) => {
 		if (res.ok) {
-			await res.json().then((x: Unit[]) => {
+			await res.json().then((x: CustomResponseType<Unit[]>) => {
+				result = x;
+			});
+		}
+	});
+
+	return result;
+}
+
+export async function getGameDetails(game_uuid: string) {
+	let result: CustomResponseType<Game> | undefined;
+	const response = fetch("http://localhost:8081/game/" + game_uuid, {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json",
+			authorization: sessionStorage.getItem("jwt") || "",
+		},
+	});
+
+	await response.then(async (res) => {
+		if (res.ok) {
+			await res.json().then((x: CustomResponseType<Game>) => {
 				result = x;
 			});
 		}
@@ -123,7 +145,7 @@ export async function getAllUnits() {
 
 export async function getUserData() {
 	let result: User | undefined;
-	const response = fetch("http://localhost:8081/user/unit", {
+	const response = fetch("http://localhost:8081/user", {
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",

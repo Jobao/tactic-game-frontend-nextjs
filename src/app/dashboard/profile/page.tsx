@@ -16,7 +16,13 @@ export default function UserProfile() {
 	const [inventory, setInventory] = useState<{ inventory: { amount: number; item: { img_url: string } }[] }>();
 	useEffect(() => {
 		getAllUnits().then((x) => {
-			setUnits(x);
+			if (x?.status === "OK") {
+				if (x.data) {
+					console.log(x.data);
+
+					setUnits(x.data);
+				}
+			}
 		});
 	}, [nUnit]);
 

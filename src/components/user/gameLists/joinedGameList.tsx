@@ -30,7 +30,7 @@ export default function JoinedGameList(props: { games: IGameHeaders[] }) {
 									</th>
 									<td className="px-6 py-4">{game.isStart ? "SI" : "NO"}</td>
 									<td className="flex items-center px-6 py-4">
-										<PlanningGameButton></PlanningGameButton>
+										<PlanningGameButton {...{ game_uuid: game.game_uuid }}></PlanningGameButton>
 									</td>
 								</tr>
 							);

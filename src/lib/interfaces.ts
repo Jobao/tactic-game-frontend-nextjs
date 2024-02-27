@@ -198,3 +198,9 @@ export interface IGameHeaders {
 	isEnd: boolean;
 	isStart: boolean;
 }
+
+export interface CustomResponseType<T> {
+	status: string;
+	reason: string;
+	data: T;
+}

@@ -10,8 +10,6 @@ export default function myCurrentGames(props: { onJoined: boolean }) {
 	const [joinedGameHeaders, setJoinedGameHeaders] = useState<IGameHeaders[]>([]);
 	const [loading, setloading] = useState<boolean>(true);
 
-	const [userUnitList, setUserUnitList] = useState<Unit[]>();
-
 	useEffect(() => {
 		const response = fetch("http://localhost:8081/game/allgamesbyuser", {
 			method: "GET",
@@ -38,9 +36,6 @@ export default function myCurrentGames(props: { onJoined: boolean }) {
 					setloading(false);
 				});
 			}
-		});
-		getAllUnits().then((x) => {
-			setUserUnitList(x);
 		});
 	}, [props.onJoined]);
 	return (
